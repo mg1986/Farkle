@@ -10,21 +10,17 @@ public class Player {
     Player (String name) {
         playerName = name;
         playerScore = 0;
-
     }
 
     public String getPlayerName() {
-
         return playerName;
     }
 
     public int getPlayerScore () {
-
         return playerScore;
     }
 
     public void setPlayerScore (int score) {
-
         playerScore = playerScore + score;
     }
 }

@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 /**
  * Farkle - Dice game where the goal is to reach 10,000 points
@@ -6,24 +7,54 @@
 
 public class Farkle {
     public static void main (String[] args) {
+        run();
+    }
 
-        Player player1 = new Player("Matt");
-        System.out.println(player1.playerName);
+    int MAX_SCORE = 10_000;
 
-        Dice dice = new Dice(6);
+    public static void run() {
+        System.out.println("Welcome to Farkle. Pick one of the " +
+                "following menu options: \n1. New Game\n2. Load " +
+                "Game\n3. View Rules\n4. Exit");
+        System.out.println();
 
-        int roll = dice.rollDice();
+        Scanner sc = new Scanner(System.in);
+        int menuOption = sc.nextInt();
 
-        player1.setPlayerScore(roll);
+        if (menuOption == 1) {
+            newGame();
+        } else if (menuOption == 2) {
+            // loadGame();
+        } else if (menuOption == 3) {
+            // displayRules();
+        } else if (menuOption == 4) {
+            System.out.println("Thank you for playing Farkle!");
+            System.exit(0);
+        }
+    }
 
-        System.out.println(player1.getPlayerScore());
+    public static void newGame() {
 
-        roll = dice.rollDice();
+        Scanner sc = new Scanner(System.in);
+        int numPlayers = sc.nextInt();
 
-        player1.setPlayerScore(roll);
+        System.out.println("Enter name for each player\n");
 
-        System.out.println(player1.getPlayerScore());
+        for (int i=0; i<=numPlayers; i++) {
 
+            Player p = new Player("");
+
+
+        }
+    }
+
+    public static void loadGame() {
 
     }
+
+    public static void displayRules() {
+
+    }
+
 }
+
