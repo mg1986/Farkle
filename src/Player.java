@@ -12,15 +12,17 @@ public class Player {
         playerScore = 0;
     }
 
-    public String getPlayerName() {
+    public String getName() {
         return playerName;
     }
 
-    public int getPlayerScore () {
+    public int getScore () {
+
         return playerScore;
     }
 
-    public void setPlayerScore (int score) {
+    public void setScore (int score) {
+
         playerScore = playerScore + score;
     }
 }
