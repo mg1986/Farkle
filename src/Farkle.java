@@ -11,29 +11,37 @@ public class Farkle {
     }
 
     int MAX_SCORE = 10_000;
-    static String LINE = "--------------------------";
+    static String LINE = "----------------------------" +
+                         "----------------------------";
 
     public static void mainMenu() {
-        System.out.println(LINE);
-        System.out.println("Welcome to Farkle. Pick one of the " +
+        menuPrint("Welcome to Farkle. Pick from the " +
                 "following menu options: \n1. New Game\n2. Load " +
                 "Game\n3. View Rules\n4. Exit");
-        System.out.println(LINE);
 
         Scanner sc = new Scanner(System.in);
-        int menuOption = sc.nextInt();
 
-        if (menuOption == 1) {
-            //Player[] roster = createRoster();
-            newGame(createRoster());
-        } else if (menuOption == 2) {
-            // Player[] roster = loadRoster();
-            // newGame(roster);
-        } else if (menuOption == 3) {
-            // displayRules();
-        } else if (menuOption == 4) {
-            System.out.println("Thank you for playing Farkle!");
-            System.exit(0);
+        while (true) {
+            try {
+                int menuOption = sc.nextInt();
+
+                if (menuOption == 1) {
+                    Player[] roster = createRoster();
+                    //newGame(roster);
+                } else if (menuOption == 2) {
+                    // Player[] roster = loadRoster();
+                    // newGame(roster);
+                } else if (menuOption == 3) {
+                    // displayRules();
+                } else if (menuOption == 4) {
+                    System.out.println("Thank you for playing Farkle!");
+                    System.exit(0);
+                }
+                break;
+            } catch (Exception e) {
+                menuPrint("Please press 1-4 to proceed.\n");
+                mainMenu();
+            }
         }
     }
 
@@ -41,9 +49,7 @@ public class Farkle {
 
         boolean gameOver = false;
 
-        int counter = 0;
-
-        while (gameOver == false) {
+        while (!gameOver) {
             for (Player player:roster) {
                 // Logic for player turn
             }
@@ -56,14 +62,14 @@ public class Farkle {
 
     public static Player[] createRoster() {
 
-        System.out.println("Enter the number of players\n");
+        menuPrint("Enter the number of players\n");
 
         Scanner sc = new Scanner(System.in);
         int numPlayers = sc.nextInt();
 
         Player[] roster = new Player[numPlayers];
 
-        System.out.println("Enter name for each player\n");
+        menuPrint("Enter the name for each player\n");
 
         for (int i=0; i<numPlayers; i++) {
 
@@ -75,8 +81,8 @@ public class Farkle {
         return roster;
     }
 
-    /*public static Player[] loadRoster() {
-
-
-    }*/
+    public static void menuPrint(String s) {
+        System.out.println(LINE);
+        System.out.println(s);
+    }
 }

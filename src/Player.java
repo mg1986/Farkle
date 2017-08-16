@@ -6,13 +6,16 @@ public class Player {
 
     public String playerName;
     public int playerScore;
+    public boolean onScoreboard;
 
     Player (String name) {
         playerName = name;
         playerScore = 0;
+        onScoreboard = false;
     }
 
     public String getName() {
+
         return playerName;
     }
 
