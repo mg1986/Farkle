@@ -6,18 +6,22 @@ import java.util.Scanner;
  */
 
 public class Farkle {
+
+    static int MAX_SCORE = 10_000;
+    static String LINE = "----------------------------" +
+            "----------------------------";
+
     public static void main (String[] args) {
         mainMenu();
     }
 
-    int MAX_SCORE = 10_000;
-    static String LINE = "----------------------------" +
-                         "----------------------------";
-
     public static void mainMenu() {
         menuPrint("Welcome to Farkle. Pick from the " +
-                "following menu options: \n1. New Game\n2. Load " +
-                "Game\n3. View Rules\n4. Exit");
+                "following menu options: \n" +
+                "1. New Game\n" +
+                "2. Load Game\n" +
+                "3. View Rules\n" +
+                "4. Exit");
 
         Scanner sc = new Scanner(System.in);
 
@@ -27,14 +31,14 @@ public class Farkle {
 
                 if (menuOption == 1) {
                     Player[] roster = createRoster();
-                    //newGame(roster);
+                    newGame(roster);
                 } else if (menuOption == 2) {
                     // Player[] roster = loadRoster();
                     // newGame(roster);
                 } else if (menuOption == 3) {
                     // displayRules();
                 } else if (menuOption == 4) {
-                    System.out.println("Thank you for playing Farkle!");
+                    menuPrint("Thank you for playing Farkle!");
                     System.exit(0);
                 }
                 break;
@@ -51,13 +55,16 @@ public class Farkle {
 
         while (!gameOver) {
             for (Player player:roster) {
-                // Logic for player turn
+                int score = playerTurn();
+                player.setScore(score);
+
+                if (player.getScore() > MAX_SCORE) {
+                    gameOver = true;
+                    menuPrint(player.getName() + " won the game" +
+                    " with a score of " + player.getScore());
+                }
             }
         }
-    }
-
-    public static void displayRules() {
-
     }
 
     public static Player[] createRoster() {
@@ -71,7 +78,7 @@ public class Farkle {
 
         menuPrint("Enter the name for each player\n");
 
-        for (int i=0; i<numPlayers; i++) {
+        for (int i=0; i<=numPlayers; i++) {
 
             String name = sc.nextLine();
             Player p = new Player(name);
@@ -79,6 +86,22 @@ public class Farkle {
         }
 
         return roster;
+    }
+
+    public static int playerTurn() {
+
+        int score = 0;
+        boolean endOfTurn = false;
+
+        while (!endOfTurn) {
+            menuPrint("1. Roll dice\n" +
+                    "2. End turn" +
+                    "3. View Rules\n" +
+                    "4. View Scoreboard\n" +
+                    "5. Save and exit game");
+        }
+
+        return score;
     }
 
     public static void menuPrint(String s) {
