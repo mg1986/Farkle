@@ -12,10 +12,11 @@ public class Farkle {
                          "----------------------------";
 
     public static void main(String[] args) {
-        mainMenu();
+        Scanner sc = new Scanner(System.in);
+        mainMenu(sc);
     }
 
-    public static void mainMenu() {
+    public static void mainMenu(Scanner sc) {
         menuPrint("Welcome to Farkle. Pick from the following " +
                 "menu options: \n" +
                 "1. New Game\n" +
@@ -23,15 +24,13 @@ public class Farkle {
                 "3. View Rules\n" +
                 "4. Exit");
 
-        Scanner sc = new Scanner(System.in);
-
         while (true) {
             try {
                 int menuOption = sc.nextInt();
 
                 if (menuOption == 1) {
-                    Player[] roster = createRoster();
-                    newGame(roster);
+                    Player[] roster = createRoster(sc);
+                    newGame(roster, sc);
                 } else if (menuOption == 2) {
                     // loadGame()
                 } else if (menuOption == 3) {
@@ -43,18 +42,19 @@ public class Farkle {
                 break;
             } catch (Exception e) {
                 menuPrint("Please press 1-4 to proceed.\n");
-                mainMenu();
+                mainMenu(sc);
             }
         }
     }
 
-    public static void newGame(Player[] roster) {
+
+    public static void newGame(Player[] roster, Scanner sc) {
 
         boolean gameOver = false;
 
         while (!gameOver) {
             for (Player player : roster) {
-                int score = playerTurn();
+                int score = playerTurn(player, sc);
                 player.setScore(score);
 
                 if (player.getScore() > MAX_SCORE) {
@@ -66,11 +66,10 @@ public class Farkle {
         }
     }
 
-    public static Player[] createRoster() {
+    public static Player[] createRoster(Scanner sc) {
 
         menuPrint("Enter the number of players\n");
 
-        Scanner sc = new Scanner(System.in);
         int numPlayers = sc.nextInt();
 
         Player[] roster = new Player[numPlayers];
@@ -78,7 +77,6 @@ public class Farkle {
         menuPrint("Enter the name for each player\n");
 
         for (int i = 0; i <= numPlayers; i++) {
-
             String name = sc.nextLine();
             Player p = new Player(name);
             roster[i] = p;
@@ -87,12 +85,10 @@ public class Farkle {
         return roster;
     }
 
-    public static int playerTurn(Player player) {
+    public static int playerTurn(Player player, Scanner sc) {
 
         int score = 0;
         boolean endOfTurn = false;
-
-        Scanner sc = new Scanner(System.in);
         int menuOption = sc.nextInt();
 
         while (!endOfTurn) {
@@ -105,12 +101,12 @@ public class Farkle {
             if (menuOption == 1) {
                 // score = score + rollDice();
             } else if (menuOption == 2) {
-                if (player.onScoreboard = true || player.getScore() >= 1000) {
-                    player.setScore(score);
-                    endOfTurn = true;
+                if (player.onScoreboard || player.getScore() >= 1000) {
+                    return score;
                 } else {
-                    menuPrint("You can only end your turn after reaching 1,000 points" +
-                            "to get on the board.");
+                    menuPrint("You can only end your turn after " +
+                            "reaching 1,000 points to get on the " +
+                            "board.");
                 }
             } else if (menuOption == 3) {
                 // displayRules();

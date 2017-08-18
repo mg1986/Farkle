@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Dice {
 
     // Number of sides Dice object will start with
-    public int numSides;
     public int MIN = 0;
+    public int numSides;
 
     // Dice constructor
     Dice(int sides) {
@@ -17,7 +17,7 @@ public class Dice {
 
     // Roll Dice method
     public int rollDice () {
-        int randomNum = ThreadLocalRandom.current().nextInt(MIN, numSides + 1);
-        return randomNum;
+        int randomInt = ThreadLocalRandom.current().nextInt(MIN, numSides + 1);
+        return randomInt;
     }
 }
