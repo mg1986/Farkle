@@ -7,57 +7,77 @@ import java.util.Scanner;
 
 public class Farkle {
 
-    static int MAX_SCORE = 10_000;
-    static String LINE = "----------------------------" +
-                         "----------------------------";
+    private static final int MAX_NUM_DICE = 6;
+    private static final int MAX_SCORE = 10_000;
+    private static final String LINE = "-------------------------------" +
+                                       "-------------------------------";
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        mainMenu(sc);
+        mainMenu();
     }
 
-    public static void mainMenu(Scanner sc) {
-        menuPrint("Welcome to Farkle. Pick from the following " +
-                "menu options: \n" +
+    private static void mainMenu() {
+
+        menuPrint("Welcome to Farkle. Pick from the following options: \n" +
                 "1. New Game\n" +
                 "2. Load Game\n" +
                 "3. View Rules\n" +
                 "4. Exit");
 
-        while (true) {
-            try {
-                int menuOption = sc.nextInt();
+        String menuOption = System.console().readLine();
 
-                if (menuOption == 1) {
-                    Player[] roster = createRoster(sc);
-                    newGame(roster, sc);
-                } else if (menuOption == 2) {
-                    // loadGame()
-                } else if (menuOption == 3) {
-                    // displayRules();
-                } else if (menuOption == 4) {
-                    menuPrint("Thank you for playing Farkle!");
-                    System.exit(0);
-                }
-                break;
-            } catch (Exception e) {
-                menuPrint("Please press 1-4 to proceed.\n");
-                mainMenu(sc);
-            }
+        if (menuOption.equals("1")) {
+            Player[] roster = createRoster();
+            newGame(roster);
+        } else if (menuOption.equals("2")) {
+            // loadGame()
+        } else if (menuOption.equals("3")) {
+            // displayRules();
+        } else if (menuOption.equals("4")) {
+            menuPrint("Thank you for playing Farkle!");
+            System.exit(0);
+        } else {
+            menuPrint("Please press 1-4 to proceed.");
+            mainMenu();
         }
     }
 
+    private static Player[] createRoster() {
 
-    public static void newGame(Player[] roster, Scanner sc) {
+        int numPlayers = 0;
+
+        try {
+            menuPrint("Enter the number of players: ");
+            numPlayers = Integer.parseInt(System.console().readLine());
+        } catch (Exception e) {
+            menuPrint("Please enter the number of players");
+            createRoster();
+        }
+
+        Player[] roster = new Player[numPlayers];
+
+        menuPrint("Enter the name for each player: \n");
+
+        for (int i = 0; i <= numPlayers-1 ; i++) {
+            String name = System.console().readLine();
+            Player p = new Player(name);
+            roster[i] = p;
+        }
+
+        return roster;
+    }
+
+    private static void newGame(Player[] roster) {
 
         boolean gameOver = false;
+        Dice dice = new Dice(6);
 
         while (!gameOver) {
             for (Player player : roster) {
-                int score = playerTurn(player, sc);
+                int score = playerTurn(roster, player, dice);
                 player.setScore(score);
 
-                if (player.getScore() > MAX_SCORE) {
+                if (player.getScore() >= MAX_SCORE) {
                     gameOver = true;
                     menuPrint(player.getName() + " won the game" +
                             " with a score of " + player.getScore() + " points");
@@ -66,41 +86,24 @@ public class Farkle {
         }
     }
 
-    public static Player[] createRoster(Scanner sc) {
-
-        menuPrint("Enter the number of players\n");
-
-        int numPlayers = sc.nextInt();
-
-        Player[] roster = new Player[numPlayers];
-
-        menuPrint("Enter the name for each player\n");
-
-        for (int i = 0; i <= numPlayers; i++) {
-            String name = sc.nextLine();
-            Player p = new Player(name);
-            roster[i] = p;
-        }
-
-        return roster;
-    }
-
-    public static int playerTurn(Player player, Scanner sc) {
+    private static int playerTurn(Player[] roster, Player player, Dice dice) {
 
         int score = 0;
+        int numDiceUsed = 0;
+        Dice[] roll;
         boolean endOfTurn = false;
-        int menuOption = sc.nextInt();
 
         while (!endOfTurn) {
             menuPrint("1. Roll dice\n" +
-                    "2. Bank points and end turn" +
-                    "3. View Rules\n" +
-                    "4. View Scoreboard\n" +
-                    "5. Save and exit game");
+                    "2. Bank points and end turn\n" +
+                    "3. View Scoreboard\n" +
+                    "4. Save and exit game");
 
-            if (menuOption == 1) {
-                // score = score + rollDice();
-            } else if (menuOption == 2) {
+            String menuOption = System.console().readLine();
+
+            if (menuOption.equals("1")) {
+                roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+            } else if (menuOption.equals("2")) {
                 if (player.onScoreboard || player.getScore() >= 1000) {
                     return score;
                 } else {
@@ -108,46 +111,47 @@ public class Farkle {
                             "reaching 1,000 points to get on the " +
                             "board.");
                 }
-            } else if (menuOption == 3) {
-                // displayRules();
-            } else if (menuOption == 4) {
-                // displayScoreboard();
-            } else if (menuOption == 5) {
+            } else if (menuOption.equals("3")) {
+                displayScoreboard(roster);
+            } else if (menuOption.equals("4")) {
                 // saveGame();
                 menuPrint("Thank you for playing Farkle!");
                 System.exit(0);
+            } else {
+                menuPrint("Please press 1-4 to proceed with turn.");
             }
-            break;
         }
 
         return score;
     }
 
-    public static int rollDice(Dice dice) {
+    public static Dice[] rollDice(Dice dice, int numDice) {
+         Dice[] roll = new Dice[numDice];
 
+         return roll;
     }
 
     public static void displayRules() {
 
-
     }
 
     public static void displayScoreboard(Player[] playerRoster) {
-
-
+        String space = "          "
+        System.out.println(LINE);
+        for (Player player : playerRoster) {
+            System.out.println(player.getName() + space + player.getScore());
+        }
     }
 
-    public static Player[] loadGame() {
-
+/*    public static Player[] loadGame() {
 
     }
 
     public static void saveGame() {
 
+    }*/
 
-    }
-
-    public static void menuPrint(String s) {
+    private static void menuPrint(String s) {
         System.out.println(LINE);
         System.out.println(s);
     }
