@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Farkle - Dice game where the goal is to reach 10,000 points
@@ -9,8 +9,9 @@ public class Farkle {
 
     private static final int MAX_NUM_DICE = 6;
     private static final int MAX_SCORE = 10_000;
-    private static final String LINE = "-------------------------------" +
-                                       "-------------------------------";
+    private static final String SCOREBOARD_SEPARATOR = "          ";
+    private static final String MENU_SEPARATOR = "---------------------------" +
+            "-----------------------------------";
 
     public static void main(String[] args) {
         mainMenu();
@@ -58,7 +59,7 @@ public class Farkle {
 
         menuPrint("Enter the name for each player: \n");
 
-        for (int i = 0; i <= numPlayers-1 ; i++) {
+        for (int i = 0; i < roster.length; i++) {
             String name = System.console().readLine();
             Player p = new Player(name);
             roster[i] = p;
@@ -90,7 +91,7 @@ public class Farkle {
 
         int score = 0;
         int numDiceUsed = 0;
-        Dice[] roll;
+        int[] roll;
         boolean endOfTurn = false;
 
         while (!endOfTurn) {
@@ -103,13 +104,25 @@ public class Farkle {
 
             if (menuOption.equals("1")) {
                 roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+                System.out.println(Arrays.toString(roll));
+
+                // Analyze roll for straight or 3 pairs of 2
+                Set rollSet = new HashSet<>(Arrays.asList(roll));
+                if (rollSet.size() == 6 || rollSet.size() == 3) {
+                    score = score + 1500;
+                } /*else if () {
+
+                }
+*/
+                // Analyze roll for 3 or more of a kind
+
+
             } else if (menuOption.equals("2")) {
                 if (player.onScoreboard || player.getScore() >= 1000) {
                     return score;
                 } else {
-                    menuPrint("You can only end your turn after " +
-                            "reaching 1,000 points to get on the " +
-                            "board.");
+                    menuPrint("You can only end your turn after reaching " +
+                            "1,000 points to get on the board.");
                 }
             } else if (menuOption.equals("3")) {
                 displayScoreboard(roster);
@@ -125,34 +138,40 @@ public class Farkle {
         return score;
     }
 
-    public static Dice[] rollDice(Dice dice, int numDice) {
-         Dice[] roll = new Dice[numDice];
+    private static int[] rollDice(Dice dice, int numDice) {
 
-         return roll;
+        int[] roll = new int[numDice];
+
+        for (int i = 0; i < roll.length; i++) {
+            int diceRoll = dice.rollDice();
+            roll[i] = diceRoll;
+        }
+
+        return roll;
     }
 
-    public static void displayRules() {
+    private static void displayRules() {
 
     }
 
-    public static void displayScoreboard(Player[] playerRoster) {
-        String space = "          "
-        System.out.println(LINE);
-        for (Player player : playerRoster) {
-            System.out.println(player.getName() + space + player.getScore());
+    private static void displayScoreboard(Player[] roster) {
+        System.out.println(MENU_SEPARATOR);
+        for (Player player : roster) {
+            System.out.println(player.getName() + SCOREBOARD_SEPARATOR +
+                    player.getScore());
         }
     }
 
-/*    public static Player[] loadGame() {
+/*    private static Player[] loadGame() {
 
     }
 
-    public static void saveGame() {
+    private static void saveGame() {
 
-    }*/
-
+    }
+*/
     private static void menuPrint(String s) {
-        System.out.println(LINE);
+        System.out.println(MENU_SEPARATOR);
         System.out.println(s);
     }
 }

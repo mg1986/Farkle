@@ -6,8 +6,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Dice {
 
+    // Dice roll will always have a minimum of 1
+    public final int ROLL_MINIMUM = 1;
+
     // Number of sides Dice object will start with
-    public int MIN = 0;
     public int numSides;
 
     // Dice constructor
@@ -17,7 +19,9 @@ public class Dice {
 
     // Roll Dice method
     public int rollDice () {
-        int randomInt = ThreadLocalRandom.current().nextInt(MIN, numSides + 1);
+        int randomInt = ThreadLocalRandom.current().nextInt(ROLL_MINIMUM,
+                numSides + 1);
+        
         return randomInt;
     }
 }
