@@ -14,6 +14,7 @@ public class Dice {
 
     // Dice constructor
     Dice(int sides) {
+
         numSides = sides;
     }
 
@@ -21,7 +22,7 @@ public class Dice {
     public int rollDice () {
         int randomInt = ThreadLocalRandom.current().nextInt(ROLL_MINIMUM,
                 numSides + 1);
-        
+
         return randomInt;
     }
 }

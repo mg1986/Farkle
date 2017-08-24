@@ -9,11 +9,12 @@ public class Farkle {
 
     private static final int MAX_NUM_DICE = 6;
     private static final int MAX_SCORE = 10_000;
-    private static final String SCOREBOARD_SEPARATOR = "          ";
-    private static final String MENU_SEPARATOR = "---------------------------" +
-            "-----------------------------------";
+    private static final String SCOREBOARD_SEPARATOR = "             ";
+    private static final String MENU_SEPARATOR = "------------------------------------" +
+                                                 "------------------------------------";
 
     public static void main(String[] args) {
+
         mainMenu();
     }
 
@@ -48,8 +49,12 @@ public class Farkle {
         int numPlayers = 0;
 
         try {
-            menuPrint("Enter the number of players: ");
+            menuPrint("Enter the number of players (must be >= 2): ");
             numPlayers = Integer.parseInt(System.console().readLine());
+            if (numPlayers < 2) {
+                menuPrint("Farkle requires a minimum or 2 players");
+                createRoster();
+            }
         } catch (Exception e) {
             menuPrint("Please enter the number of players");
             createRoster();
@@ -76,12 +81,16 @@ public class Farkle {
         while (!gameOver) {
             for (Player player : roster) {
                 int score = playerTurn(roster, player, dice);
+                if (score >= 1000) {
+                    player.onScoreboard = true;
+                }
+
                 player.setScore(score);
 
                 if (player.getScore() >= MAX_SCORE) {
                     gameOver = true;
                     menuPrint(player.getName() + " won the game" +
-                            " with a score of " + player.getScore() + " points");
+                            " with a score of " + String.format("%,d", player.getScore()) + " points");
                 }
             }
         }
@@ -91,10 +100,14 @@ public class Farkle {
 
         int score = 0;
         int numDiceUsed = 0;
-        int[] roll;
+        int[] diceOnHand = new int[6];
         boolean endOfTurn = false;
 
         while (!endOfTurn) {
+
+            menuPrint("It is " + player.getName() + "'s turn\n" +
+                    player.getName() + "'s current score for this turn is " + score);
+
             menuPrint("1. Roll dice\n" +
                     "2. Bank points and end turn\n" +
                     "3. View Scoreboard\n" +
@@ -103,20 +116,9 @@ public class Farkle {
             String menuOption = System.console().readLine();
 
             if (menuOption.equals("1")) {
-                roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+                int[] roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
                 System.out.println(Arrays.toString(roll));
-
-                // Analyze roll for straight or 3 pairs of 2
-                Set rollSet = new HashSet<>(Arrays.asList(roll));
-                if (rollSet.size() == 6 || rollSet.size() == 3) {
-                    score = score + 1500;
-                } /*else if () {
-
-                }
-*/
-                // Analyze roll for 3 or more of a kind
-
-
+                score = score + analyzeDiceRoll(player, score, roll, dice, numDiceUsed);
             } else if (menuOption.equals("2")) {
                 if (player.onScoreboard || player.getScore() >= 1000) {
                     return score;
@@ -135,7 +137,7 @@ public class Farkle {
             }
         }
 
-        return score;
+        return score; // Return player score for the turn
     }
 
     private static int[] rollDice(Dice dice, int numDice) {
@@ -150,6 +152,45 @@ public class Farkle {
         return roll;
     }
 
+    private static int analyzeDiceRoll(Player player, int score, int[] roll, Dice dice, int numDiceUsed) {
+        int rollScore = 0;
+
+        // Analyze roll for straight or 3 pairs of 2
+        Set rollSet = new HashSet<>(Arrays.asList(roll));
+        //int[] targetArray = rollSet.toArray(new Integer[rollSet.size()]);
+
+        if (rollSet.size() == 6) { // Analyze roll for straight (a, b, c, d, e, f)
+            menuPrint(player.getName() + "rolled a straight. " + player.getName()+ " must keep rolling since all" +
+                    "6 dice are in play.");
+            score = score + 1500;
+            roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+            score = score + analyzeDiceRoll(player, score, roll, dice, numDiceUsed);
+
+        } else if (rollSet.size() == 3) { // Analyze roll for 3 pairs of 2 (a, a, b, b, c, c)
+            menuPrint(player.getName() + "'rolled 3 pairs of 2." + player.getName()+ "  They must keep rolling " +
+                    "since all 6 dice are in play.");
+            score = score + 1500;
+            roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+            score = score + analyzeDiceRoll(player, score, roll, dice, numDiceUsed);
+
+        } else if (rollSet.size() == 1) { // Analyze roll for 6 of a kind (a, a, a, a, a, a)
+            menuPrint(player.getName() + "'rolled 6 of a kind." + player.getName()+ " must keep rolling since " +
+                     "6 dice are in play.");
+            if (rollSet.contains(1)) {
+                score = score + 8000;
+            }
+
+            //score = score +  ;
+            roll = rollDice(dice, MAX_NUM_DICE - numDiceUsed);
+            score = score + analyzeDiceRoll(player, score, roll, dice, numDiceUsed);
+
+        } else {
+
+        }
+
+        return rollScore; // Player score for the current roll
+    }
+
     private static void displayRules() {
 
     }
@@ -161,15 +202,15 @@ public class Farkle {
                     player.getScore());
         }
     }
+    /*
+    private static Player[] loadGame() {
 
-/*    private static Player[] loadGame() {
+        }
 
-    }
+     private static void saveGame() {
 
-    private static void saveGame() {
-
-    }
-*/
+        }
+    */
     private static void menuPrint(String s) {
         System.out.println(MENU_SEPARATOR);
         System.out.println(s);

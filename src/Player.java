@@ -4,9 +4,9 @@
 
 public class Player {
 
-    public String playerName;
-    public int playerScore;
-    public boolean onScoreboard;
+    private String playerName;
+    private int playerScore;
+    private boolean onScoreboard;
 
     Player (String name) {
         playerName = name;
