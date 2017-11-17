@@ -48,6 +48,7 @@ public class Scoreboard {
     }
 
     public void loadRoster() {
+        createSavedGamesDirectory();
         File folder = new File(savedGamesDirectory);
         File[] listOfFiles = folder.listFiles();
         int numOfFiles = listOfFiles.length;
@@ -122,6 +123,7 @@ public class Scoreboard {
     //------------------------------------------------------------------------------------------------------------------
     public void saveRoster() {
         try {
+            createSavedGamesDirectory();
             Farkle.menuPrint("Enter a name for save game file: ");
             String saveFile = System.console().readLine() + FILE_EXTENSION;
             saveFile = savedGamesDirectory + File.separatorChar + saveFile;
@@ -166,6 +168,14 @@ public class Scoreboard {
 
         for (File file: listOfFiles) {
             file.delete();
+        }
+    }
+
+    public static void createSavedGamesDirectory() {
+        File savedGamesFolder = new File(savedGamesDirectory);
+        boolean exists = savedGamesFolder.exists();
+        if (!exists) {
+            savedGamesFolder.mkdirs();
         }
     }
 

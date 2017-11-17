@@ -20,8 +20,7 @@ public class Dice {
 
     // Roll Dice method
     public int rollDice () {
-        int randomInt = ThreadLocalRandom.current().nextInt(ROLL_MINIMUM,
-                numSides + 1);
+        int randomInt = ThreadLocalRandom.current().nextInt(ROLL_MINIMUM, numSides + 1);
 
         return randomInt;
     }
