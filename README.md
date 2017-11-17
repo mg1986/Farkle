@@ -16,7 +16,7 @@ any points on hand.  If a player rolls no scoring combination of dice on a roll,
 a Farkle and their turn is over. The first player to reach 10,000 points wins the game!
             
 *Possible point combinations:* 
-**One** - 100 points
+**One** - 100 points 
 
 **Five** - 50 points
 
