@@ -4,7 +4,7 @@
 
 public class RuleBook {
 
-    private static final String rules = "Farkle Rules:\n" +
+    public static final String gameRules = "Farkle Rules:\n" +
             "The goal of Farkle is to reach 10,000 points before other players. In a single turn\n" +
             "a player may keep rolling as long as they score some scoring combination of dice every\n" +
             "roll.  At least one scoring point combination must be kept every roll to keep rolling. \n" +
@@ -27,6 +27,4 @@ public class RuleBook {
             "Three pairs of Two - 1,500 points\n" +
             "Two pairs of Three - 1,500 points\n" +
             "Straight - 2,500 points\n ";
-
-    public static void viewRules() { Farkle.menuPrint(rules); }
 }

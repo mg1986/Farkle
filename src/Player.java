@@ -6,6 +6,7 @@ public class Player {
 
     private String playerName;
     private int playerScore;
+    private int turnScore;
     private int numDiceInUse;
     private boolean onScoreboard;
     private boolean isCurrentTurn;
@@ -13,6 +14,7 @@ public class Player {
     Player (String name) {
         playerName = name;
         playerScore = 0;
+        turnScore = 0;
         numDiceInUse = 0;
         onScoreboard = false;
         isCurrentTurn = false;
@@ -21,6 +23,7 @@ public class Player {
     Player (String name, int score, int numDice, boolean onBoard) {
         playerName = name;
         playerScore = score;
+        turnScore = 0;
         numDiceInUse = numDice;
         onScoreboard = onBoard;
     }
@@ -35,16 +38,30 @@ public class Player {
         return playerName;
     }
 
-    public void setScore (int score) {
+    public void setPlayerScore (int score) {
 
         playerScore = playerScore + score;
     }
 
-    public int getScore () {
+    public int getPlayerScore () {
 
         return playerScore;
     }
 
+    public void setTurnScore(int score) {
+
+        turnScore = turnScore + score;
+    }
+
+    public Integer getTurnScore() {
+
+        return turnScore;
+    }
+
+    public void resetTurnScore() {
+
+        turnScore = 0;
+    }
 
     public void setNumDiceInUse(Integer numDice) {
 
@@ -54,6 +71,11 @@ public class Player {
     public Integer getNumDiceInUse() {
 
         return numDiceInUse;
+    }
+
+    public void resetNumDiceInUse() {
+
+        numDiceInUse = 0;
     }
 
     public void setOnScoreboard(boolean onBoard) {
