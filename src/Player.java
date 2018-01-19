@@ -1,16 +1,28 @@
 /**
- * Created by matt on 8/6/17.
+ * Player class - Represents a player in the game.
  */
 
 public class Player {
 
+    // Player's name
     private String playerName;
+
+    // Player's score
     private int playerScore;
+
+    //Player's score for their current turn
     private int turnScore;
+
+    // Number of dice Player has avialable for current roll
     private int numDiceInUse;
+
+    // If Player has made it on the scoreboard
     private boolean onScoreboard;
+
+    // Is is the Player's current turn -  used to preserve order of turns when game is saved
     private boolean isCurrentTurn;
 
+    // Player constructor -  Create new Player object for new game
     Player (String name) {
         playerName = name;
         playerScore = 0;
@@ -20,6 +32,7 @@ public class Player {
         isCurrentTurn = false;
     }
 
+    // Player constructor -  Create Player object for game loaded from save file
     Player (String name, int score, int numDice, boolean onBoard) {
         playerName = name;
         playerScore = score;
@@ -28,72 +41,59 @@ public class Player {
         onScoreboard = onBoard;
     }
 
-    public void setName (String name) {
+    //------------------------------------------------------------------------------------------------------------------
+    // setName() - Sets Player's name
+    public void setName (String name) { playerName = name; }
 
-        playerName = name;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // getName() - Returns Player's name
+    public String getName() { return playerName; }
 
-    public String getName() {
+    //------------------------------------------------------------------------------------------------------------------
+    // setPlayerScore() - Sets Player's score
+    public void setPlayerScore (int score) { playerScore = playerScore + score; }
 
-        return playerName;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // getPlayerScore() - Gets Player's score
+    public int getPlayerScore () { return playerScore; }
 
-    public void setPlayerScore (int score) {
+    //------------------------------------------------------------------------------------------------------------------
+    // setTurnScore() - Set Player's score for the current turn
+    public void setTurnScore(int score) { turnScore = turnScore + score; }
 
-        playerScore = playerScore + score;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // getTurnScore() - Returns Player's score for the current turn
+    public Integer getTurnScore() { return turnScore; }
 
-    public int getPlayerScore () {
+    //------------------------------------------------------------------------------------------------------------------
+    // resetTurnScore() - Reset Player's score for the current turn
+    public void resetTurnScore() { turnScore = 0; }
 
-        return playerScore;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // setNumDiceInUse() - Set number of dice Player currently has tied up in scoring combinations
+    public void setNumDiceInUse(Integer numDice) { numDiceInUse = numDiceInUse + numDice; }
 
-    public void setTurnScore(int score) {
+    //------------------------------------------------------------------------------------------------------------------
+    // getNumDiceInUse() -  Return number of dice Player currently has tied up in scoring combinations
+    public Integer getNumDiceInUse() { return numDiceInUse; }
 
-        turnScore = turnScore + score;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // resetNumDiceInUse() - Reset number of dice Player currently has tied up in scoring combinations to zero
+    public void resetNumDiceInUse() { numDiceInUse = 0; }
 
-    public Integer getTurnScore() {
+    //------------------------------------------------------------------------------------------------------------------
+    // setOnScoreboard() - Set boolean if Player is currently on scoreboard or not
+    public void setOnScoreboard(boolean onBoard) { onScoreboard = onBoard; }
 
-        return turnScore;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // getOnScoreboard() - Return boolean if Player is currently on scoreboard or not
+    public boolean getOnScoreboard() { return onScoreboard; }
 
-    public void resetTurnScore() {
+    //------------------------------------------------------------------------------------------------------------------
+    // setIsCurrentTurn() - Set boolean if currently Player's turn
+    public void setIsCurrentTurn(boolean isTurn) { isCurrentTurn = isTurn; }
 
-        turnScore = 0;
-    }
-
-    public void setNumDiceInUse(Integer numDice) {
-
-        numDiceInUse = numDiceInUse + numDice;
-    }
-
-    public Integer getNumDiceInUse() {
-
-        return numDiceInUse;
-    }
-
-    public void resetNumDiceInUse() {
-
-        numDiceInUse = 0;
-    }
-
-    public void setOnScoreboard(boolean onBoard) {
-
-        onScoreboard = onBoard;
-    }
-
-    public boolean getOnScoreboard() {
-
-        return onScoreboard;
-    }
-
-    public void setIsCurrentTurn(boolean isTurn) {
-
-        isCurrentTurn = isTurn;
-    }
-
-    public boolean getIsCurrentTurn() {
-
-        return isCurrentTurn; }
+    //------------------------------------------------------------------------------------------------------------------
+    // setIsCurrentTurn() - Return boolean if currently Player's turn
+    public boolean getIsCurrentTurn() { return isCurrentTurn; }
 }

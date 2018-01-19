@@ -3,8 +3,12 @@ import java.lang.*;
 import java.util.*;
 
 /**
- * Farkle - Dice game where the goal is to reach 10,000 points first
- * Created by matt on 8/3/17.
+ * MainMenu class - Starting menu for the game. Allows players to:
+ *                      1. Start new game
+ *                      2. Continue existing game
+ *                      3. Delete saved games (if they exist)
+ *                      4. View game rules
+ *                      5. Exit game
  */
 
 public class MainMenu {
@@ -19,13 +23,13 @@ public class MainMenu {
     private static String savedGamesDirectory = System.getProperty("user.dir") + File.separatorChar + "saved_games";
 
     //------------------------------------------------------------------------------------------------------------------
-    // main() method - Calls the mainMenu() method to begin the game.
+    // main() - Calls the mainMenu() method to begin the game.
     public static void main(String[] args) {
         mainMenu();
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // mainMenu() method - Main menu of the game. Allows options to start new game, load previous game, delete all
+    // mainMenu() - Main menu of the game. Allows options to start new game, load previous game, delete all
     //                     saved games, view game rules, and exit menu.
     public static void mainMenu() {
 
@@ -48,7 +52,7 @@ public class MainMenu {
             deleteSavedGames();
             mainMenu();
         }else if (menuOption.equals("4")) { // View game rules
-            menuPrint(RuleBook.gameRules);
+            menuPrint(RuleBook.getGameRules());
             mainMenu();
         } else if (menuOption.equals("5")) { // Exit game
             menuPrint("Thank you for playing Farkle!");
@@ -60,10 +64,10 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // newGame() method - Called from the mainMenu() method.  Takes a Scoreboard object as input. Starts a new game or
-    //                    resumes existing game depending on state of input Scoreboard object. Once a player has reached
-    //                    10,000 points, that player is delclared the game winner, and then the newGame() method
-    //                    terminates ending the game.
+    // newGame() - Called from the mainMenu() method.  Takes a Scoreboard object as input. Starts a new game or
+    //             resumes existing game depending on state of input Scoreboard object. Once a player has reached
+    //             10,000 points, that player is delclared the game winner, and then the newGame() method
+    //             terminates ending the game.
     private static void newGame(Scoreboard scoreboard) {
 
         boolean gameOver = false;
@@ -72,7 +76,7 @@ public class MainMenu {
         while (!gameOver) {
             for (Player player : scoreboard.playerRoster) {
                 player.setIsCurrentTurn(true);
-                PlayerTurn.playerTurn(scoreboard, player, dice);
+                PlayerTurn.startPlayerTurn(scoreboard, player, dice);
                 if (player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
                     player.setOnScoreboard(true);
                 }
@@ -93,6 +97,8 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // createScoreboard() - Creates a Scoreboard object and populates it with Player objects based off input from
+    //                      console.
     public static Scoreboard createScoreboard() {
 
         int numPlayers = 0;
@@ -125,6 +131,8 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // loadScoreboard - Takes a user provided .farkle file of a previous game, and turns it into a Scoreboard object
+    //                  that is then used to resume the game saved in the file.
     public static Scoreboard loadScoreboard() {
 
         Scoreboard scoreboard = new Scoreboard();
@@ -213,6 +221,8 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // saveScoreboard() - Takes the current games Scoreboard object and turns it into a .farkle file when a player
+    //                    chooses to save the game
     public static void saveScoreboard(Scoreboard scoreboard) {
         try {
 
@@ -239,13 +249,15 @@ public class MainMenu {
                 }
 
                 if (currentTurn) {
-                    bw.write("Player_" + player.getName() + "_" + player.getPlayerScore() + "_" + player.getNumDiceInUse() + "\n");
+                    bw.write("Player_" + player.getName() + "_" + player.getPlayerScore() + "_" +
+                            player.getNumDiceInUse() + "\n");
                 }
             }
 
             for (int idx = 0; idx < currentTurnIdx; idx++) {
                 Player player = scoreboard.playerRoster[idx];
-                bw.write("Player_" + player.getName() + "_" + player.getPlayerScore() + "_" + player.getNumDiceInUse() + "\n");
+                bw.write("Player_" + player.getName() + "_" + player.getPlayerScore() + "_" +
+                        player.getNumDiceInUse() + "\n");
                 break;
             }
 
@@ -260,14 +272,13 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // deleteSavedGames() method -
+    // deleteSavedGames() - Deletes all .farkle files saved in the savedGamesDirectory, if one exists.
     public static void deleteSavedGames() {
         menuPrint("Deleting saved games....");
         File folder = new File(savedGamesDirectory);
         File[] listOfFiles = folder.listFiles();
 
         for (File file: listOfFiles) {
-
             file.delete();
         }
 
@@ -275,7 +286,7 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // menuPrint() method -
+    // menuPrint() - Prints input String to console with a visual line separator
     public static void menuPrint(String s) {
         System.out.println(MENU_SEPARATOR);
         System.out.println(s);

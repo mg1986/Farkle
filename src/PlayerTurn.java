@@ -3,7 +3,8 @@ import java.lang.*;
 import java.util.*;
 
 /**
- * 
+ * PlayerTurn class - Class that handles the logic of a Player rolling dice and then resolving the point scoring
+ *                    combinations for each roll.
  */
 
 public class PlayerTurn {
@@ -12,10 +13,9 @@ public class PlayerTurn {
     private static final int MAX_NUM_DICE = 6;
     
     //------------------------------------------------------------------------------------------------------------------
-    // playerTurn() method - Called every time a players turn happens.  Generates a new DiceRoll object every time
-    //                       it is called. Ultimately returns the players cumulative score for the turn using the
-    //                       TurnScore object's getTurnScore() method.
-    public static void playerTurn(Scoreboard scoreboard, Player player, Dice dice) {
+    // playerTurn() - Called every time a players turn happens.  Continues until the player Farkles or chooses to end
+    //                their turn and keep their current turn's points.
+    public static void startPlayerTurn(Scoreboard scoreboard, Player player, Dice dice) {
 
         while (true) {
             if (player.getNumDiceInUse() == MAX_NUM_DICE) {
@@ -58,7 +58,7 @@ public class PlayerTurn {
             } else if (menuOption.equals("3")) {
                 scoreboard.viewScoreboard();
             } else if (menuOption.equals("4")) {
-                MainMenu.menuPrint(RuleBook.gameRules);
+                MainMenu.menuPrint(RuleBook.getGameRules());
             } else if (menuOption.equals("5")) {
                 MainMenu.saveScoreboard(scoreboard);
                 MainMenu.menuPrint("Thank you for playing Farkle!");
@@ -70,7 +70,8 @@ public class PlayerTurn {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // rollDice() method -
+    // rollDice() - Returns an int array containing random rolls for the number of dice indicated with the numDice
+    //              parameter
     public static int[] rollDice(Player player, Dice dice, int numDice) {
 
         int[] roll = new int[numDice];
@@ -84,6 +85,8 @@ public class PlayerTurn {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // processDiceRoll() - Analyze Player's dice roll and presents each possble point scoring option possible.  These
+    //                       possible point scoring options are then fed into the resolveDiceRoll() method.
     public static void processDiceRoll(Player player, int[] roll, Dice dice) {
 
         HashMap<Integer, List<Integer>> rollHashMap = new HashMap<Integer, List<Integer>>();
@@ -185,6 +188,10 @@ public class PlayerTurn {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // resolveDiceRoll() - Takes all the possible point scoring options for a roll from the processDiceRoll() method
+    //                     and presents them to the Player.  They may choose what point scoring options to keep and
+    //                     discard for every roll.  The point scoring options that are kept are then added to the
+    //                     Player's turnScore variable.
     public static void resolveDiceRoll(Player player, Dice dice, DiceRollMenu diceRollMenu) {
 
         String resolveID = Integer.toString(diceRollMenu.getMenuSize() + 1);
