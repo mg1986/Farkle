@@ -29,6 +29,4 @@ a Farkle and their turn is over. The first player to reach 10,000 points wins th
                 
 **Three pairs of Two** - 1,500 points
 
-**Two pairs of Three** - 1,500 points
-
-**Straight** - 2,500 points
+**Straight** - 1,500 points
