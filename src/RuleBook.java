@@ -6,7 +6,7 @@ public class RuleBook {
 
     // Rules for game of Farkle
     private static final String gameRules = "Farkle Rules:\n" +
-            "The goal of Farkle is to reach 10,000 points before other players. In a single turn\n" +
+            "   The goal of Farkle is to reach 10,000 points before other players. In a single turn\n" +
             "a player may keep rolling as long as they score some scoring combination of dice every\n" +
             "roll.  At least one scoring point combination must be kept every roll to keep rolling. \n" +
             "The dice associated with each scoring combination are set aside before the next roll.\n" +
@@ -24,14 +24,13 @@ public class RuleBook {
             "Five - 50 points\n" +
             "3-6 of a Kind - Three 1's equals 1,000 points, every additional 1 after that doubles the points.\n" +
             "                Three of anything other than a 1 equals that number multiplied by 100, every additional\n" +
-            "                dice of that number after that doubles the points.\n" +
+            "                dice of that number after that keeps doubles the point total.\n" +
             "Three pairs of Two - 1,500 points\n" +
-            "Two pairs of Three - 1,500 points\n" +
-            "Straight - 2,500 points\n ";
+            "Straight - 1,500 points\n ";
 
     //------------------------------------------------------------------------------------------------------------------
-    // getGameRules() - Return String of game rules
-    public static String getGameRules() {
-        return gameRules;
+    // viewGameRules() - Return String of game rules
+    public static void viewRulebook() {
+        MainMenu.menuPrint(gameRules);
     }
 }

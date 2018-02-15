@@ -12,8 +12,8 @@ public class Scoreboard {
     public static final int MIN_SCOREBOARD_SCORE = 1_000;
     public static final int MAX_SCORE = 10_000;
     private static final String SCOREBOARD_SEPARATOR = "                              ";
-  
-    Scoreboard () { }
+
+    Scoreboard () {}
 
     Scoreboard (int numberOfPlayers) { playerRoster = new Player[numberOfPlayers];}
 

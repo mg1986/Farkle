@@ -42,24 +42,30 @@ public class MainMenu {
 
         String menuOption = System.console().readLine();
 
-        if (menuOption.equals("1")) { // New game
-            Scoreboard scoreboard = createScoreboard();
-            newGame(scoreboard);
-        } else if (menuOption.equals("2")) { // Load game
-            Scoreboard scoreboard = loadScoreboard();
-            newGame(scoreboard);
-        } else if (menuOption.equals("3")) { // Delete saved games
-            deleteSavedGames();
-            mainMenu();
-        }else if (menuOption.equals("4")) { // View game rules
-            menuPrint(RuleBook.getGameRules());
-            mainMenu();
-        } else if (menuOption.equals("5")) { // Exit game
-            menuPrint("Thank you for playing Farkle!");
-            System.exit(0);
-        } else {
-            menuPrint("Please press 1-5 to proceed.");
-            mainMenu();
+        switch (menuOption) {
+            case "1":  // New game
+                Scoreboard newScoreboard = createScoreboard();
+                newGame(newScoreboard);
+                break;
+            case "2": // Load game
+                Scoreboard loadedScoreboard = loadScoreboard();
+                newGame(loadedScoreboard);
+                break;
+            case "3":  // Delete saved games
+                deleteSavedGames();
+                mainMenu();
+                break;
+            case "4": // View game rules
+                RuleBook.viewRulebook();
+                mainMenu();
+                break;
+            case "5":  // Exit game
+                menuPrint("Thank you for playing Farkle!");
+                System.exit(0);
+            default:
+                menuPrint("Please press 1-5 to proceed.");
+                mainMenu();
+                break;
         }
     }
 
@@ -71,17 +77,17 @@ public class MainMenu {
     private static void newGame(Scoreboard scoreboard) {
 
         boolean gameOver = false;
-        Dice dice = new Dice(6);
 
         while (!gameOver) {
             for (Player player : scoreboard.playerRoster) {
                 player.setIsCurrentTurn(true);
-                PlayerTurn.startPlayerTurn(scoreboard, player, dice);
+                PlayerMenu.startPlayerTurn(scoreboard, player);
+                int turnScore = player.getTurnScore();
+
                 if (player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
                     player.setOnScoreboard(true);
                 }
 
-                int turnScore = player.getTurnScore();
                 player.setPlayerScore(turnScore);
 
                 if (player.getPlayerScore() >= scoreboard.MAX_SCORE) {
@@ -89,9 +95,8 @@ public class MainMenu {
                     menuPrint(player.getName() + " won the game with a score of " +
                             String.format("%,d", player.getPlayerScore()) + " points!");
                 }
-                player.resetTurnScore();
-                player.resetNumDiceInUse();
-                player.setIsCurrentTurn(false);
+
+                player.resetPlayerTurn();
             }
         }
     }
@@ -101,26 +106,11 @@ public class MainMenu {
     //                      console.
     public static Scoreboard createScoreboard() {
 
-        int numPlayers = 0;
-
-        menuPrint("Enter the number of players (must 2 or more players): ");
-
-        try {
-            numPlayers = Integer.parseInt(System.console().readLine());
-        } catch (NumberFormatException nfe) {
-            menuPrint("Please enter the number of players");
-            createScoreboard();
-        }
-
-        if (numPlayers < 2) {
-            menuPrint("Farkle requires a minimum of 2 players");
-            createScoreboard();
-        }
+        Integer numPlayers = askHowManyPlayers();
 
         Scoreboard scoreboard = new Scoreboard(numPlayers);
 
         menuPrint("Enter the name for each player: \n");
-
         for (int i = 0; i < numPlayers; i++) {
             String name = System.console().readLine();
             Player player = new Player(name);
@@ -128,6 +118,28 @@ public class MainMenu {
         }
 
         return scoreboard;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // askHowManyPlayers() -
+    public static Integer askHowManyPlayers() {
+
+        menuPrint("Enter the number of players (must 2 or more players): ");
+        Integer numPlayers = 0;
+
+        try {
+            numPlayers = Integer.parseInt(System.console().readLine());
+        } catch (NumberFormatException nfe) {
+            menuPrint("Please enter the number of players");
+            numPlayers = askHowManyPlayers();
+        }
+
+        if (numPlayers < 2) {
+            menuPrint("Farkle requires a minimum of 2 players");
+            numPlayers = askHowManyPlayers();
+        }
+
+        return numPlayers;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -224,6 +236,9 @@ public class MainMenu {
     // saveScoreboard() - Takes the current games Scoreboard object and turns it into a .farkle file when a player
     //                    chooses to save the game
     public static void saveScoreboard(Scoreboard scoreboard) {
+
+        menuPrint("Thank you for playing Farkle!");
+
         try {
 
             File savedGamesFolder = new File(savedGamesDirectory);
@@ -269,6 +284,8 @@ public class MainMenu {
             menuPrint("Please enter a valid path and file name");
             saveScoreboard(scoreboard);
         }
+
+        System.exit(0);
     }
 
     //------------------------------------------------------------------------------------------------------------------

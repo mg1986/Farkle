@@ -96,4 +96,12 @@ public class Player {
     //------------------------------------------------------------------------------------------------------------------
     // setIsCurrentTurn() - Return boolean if currently Player's turn
     public boolean getIsCurrentTurn() { return isCurrentTurn; }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // resetPlayerTurn() -
+    public void resetPlayerTurn() {
+        resetTurnScore();
+        resetNumDiceInUse();
+        setIsCurrentTurn(false);
+    }
 }
