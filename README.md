@@ -13,8 +13,8 @@ keep going one more roll no matter what.  The point totals from the previous rol
 as the player rerolls with all 6 dice.  Until a player initially reaches 1,000 points, they 
 may not stop their turn and bank their points.  However, once the 1,000 point mark has been
 reached in one turn, the player may choose to stop their turn at any time and bank that
-current turn's points to the scoreboard, as well as stop an future turn at any point and bank
-any points on hand.  If a player rolls no scoring combination of dice on a roll, that is called
+current turn's points to the scoreboard, as well as stop a future turn at any point and bank
+any points on hand.  If a player rolls no scoring combination of dice in a roll, that is called
 a Farkle and their turn is over. The first player to reach 10,000 points wins the game!
             
 *Possible point combinations:* 
