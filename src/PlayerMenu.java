@@ -83,15 +83,16 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // rollAndAnalyzeDice() -
-    //
+    // rollAndAnalyzeDice() - Created a dice roll using the number of dice indicated by the numDice paramter.  Dice roll
+    //                        ArrayList is then fed into the analyzeDiceRoll method to check it for possible scoring
+    //                        variations.
     public static void rollAndAnalyzeDice(Player player, int numDice) {
         ArrayList<Integer> diceRoll = rollDice(player, numDice);
         analyzeDiceRoll(player, diceRoll);
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // rerollDice() -
+    // rerollDice() - Automatically makes player roll all 6 dice again if they have 6 dice tied up in points.
     public static void rerollDice(Player player) {
         clearScreen();
         System.out.println(player.getName() + " must roll again since all 6 dice are in play.");
@@ -102,7 +103,8 @@ public class PlayerMenu extends MainMenu {
 
     //------------------------------------------------------------------------------------------------------------------
     // processDiceRoll() - Analyze Player's dice roll and presents each possble point scoring option possible.  These
-    //                       possible point scoring options are then fed into the resolveDiceRoll() method.
+    //                     possible point scoring options are then fed into the resolveDiceRoll() method where the player
+    //                     will choose which ones to keep and discard.
     public static void analyzeDiceRoll(Player player, ArrayList<Integer> diceRoll) {
 
         clearScreen();
@@ -222,7 +224,8 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // checkforFarkle() -
+    // checkforFarkle() - Checks the player of the current turn's turnScore value.  It if is zero, it indicates the
+    //                    player Farkled during their turn, and now their turn is over.
     public static boolean checkforFarkle(Player player) {
 
         boolean playersTurnStillActive = true;
@@ -237,7 +240,11 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // checkScoreboardAndBankPoints() -
+    // checkScoreboardAndBankPoints() - Checks to see if player of current turn is on scoreboard already, or they have
+    //                                  scored >= 1,000 points on their current turn.  If they meet any of these criteria,
+    //                                  they can end their turn at any time and bank their current point total.  If they
+    //                                  haven't reached any of the criteria, they must keep rolling until they reach
+    //                                  >= 1,000 points or Farkle to end their turn.
     public static boolean checkScoreboardAndBankPoints(Player player, Scoreboard scoreboard) {
 
         clearScreen();
@@ -257,7 +264,17 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // buildRollHashMap() -
+    // buildRollHashMap() - Takes a ArrayList of dice roll values and builds a hashmap using the roll values as keys,
+    //                      and the index of that value in the ArrayList, in a corresping ArrayList as the value. As an
+    //                      example, if a player rolls [1,2,4,5,6,6], the hashmap would look this this:
+    //                      Key ----- Value
+    //                       1  ----- [0]
+    //                       2  ----- [1]
+    //                       4  ----- [2]
+    //                       5  ----- [3]
+    //                       6  ----- [4, 5]
+    //                      This hashmap is then used to calculate all of that rolls scoring variantions and the
+    //                      correpsoning index values of the dice they involve.
     public static HashMap<Integer, ArrayList<Integer>> buildRollHashMap (ArrayList<Integer> roll) {
 
         HashMap<Integer, ArrayList<Integer>> rollHashMap = new HashMap<Integer, ArrayList<Integer>>();
@@ -278,7 +295,9 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // calculateThreeOfKindOrGreater() -
+    // calculateThreeOfKindOrGreater() - Calculates the point value for a scoring variation of 3 of a kind or more
+    //                                   based on the formula in the Rulebook. Creates and adds a ScoreVariant object
+    //                                   to the DiceRollMenu ArrayList.
     public static void calculateThreeOfKindOrGreater (ArrayList<ScoreVariant> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
 
         Integer rollIndexListSize = rollIndexList.size();
@@ -296,7 +315,8 @@ public class PlayerMenu extends MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // calculateOneOrFive -
+    // calculateOneOrFive - Calculates the point value for a scoring variation a single 1 or 5 value being rolled.
+    //                      Creates and adds a ScoreVariant object to the DiceRollMenu ArrayList.
     public static void calculateOneOrFive (ArrayList<ScoreVariant> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
 
         Integer rollIndexListSize = rollIndexList.size();

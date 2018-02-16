@@ -98,7 +98,7 @@ public class Player {
     public boolean getIsCurrentTurn() { return isCurrentTurn; }
 
     //------------------------------------------------------------------------------------------------------------------
-    // resetPlayerTurn() -
+    // resetPlayerTurn() - Resets all instance variables that deal with the player's turn.
     public void resetPlayerTurn() {
         resetTurnScore();
         resetNumDiceInUse();

@@ -3,25 +3,36 @@ import java.lang.*;
 import java.util.*;
 
 /**
- * Created by matt on 10/16/17.
+ * Scoreboard class - Scoreboard for the game. Keeps track of all players
  */
 
-public class Scoreboard extends MainMenu{
+public class Scoreboard {
 
+    // Roster that holds the player objects for the current game
     public Player[] playerRoster;
-    public static final int MIN_SCOREBOARD_SCORE = 1_000;
-    public static final int MAX_SCORE = 10_000;
-    private static final String SCOREBOARD_SEPARATOR = "                              ";
 
+    // Minumum point value from a single turn required to initially bank points to the scoreboard.
+    public static final int MIN_SCOREBOARD_SCORE = 1_000;
+
+    // Number of points required to win game
+    public static final int MAX_SCORE = 10_000;
+
+    // Scoreboard no args constructor
     Scoreboard () {}
 
+    // Scoreboard constructor - Takes the number of players the scoreboard will have and creates the player roster array
     Scoreboard (int numberOfPlayers) { playerRoster = new Player[numberOfPlayers];}
 
+    //------------------------------------------------------------------------------------------------------------------
+    // viewScoreboard() - Prints player name and score for every player in player roster to the console.
     public void viewScoreboard() {
         MainMenu.clearScreen();
         for (Player player : playerRoster) {
-            System.out.println(player.getName() + SCOREBOARD_SEPARATOR + player.getPlayerScore());
+            String stringPadding = Integer.toString(50 - player.getName().length());
+            String playerScore = Integer.toString(player.getPlayerScore());
+            System.out.printf("%s %" + stringPadding + "s\n", player.getName(), playerScore);
         }
+        System.out.println("---------------------------------------------------");
         MainMenu.pauseScreen();
     }
 }
