@@ -139,6 +139,9 @@ public class PlayerMenu extends MainMenu {
             if (diceRollMenu.size() > 0) { // If players roll contains any scoring combinations, resolve dice roll.
                 resolveDiceRoll(player, diceRollMenu, diceRoll);
             } else { // Else if player's dice roll was a farkle, reset all turn variables end turn.
+                clearScreen();
+                System.out.println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
+                        "------------------------------------------------------------------------");
                 player.resetPlayerTurn();
             }
         }
@@ -225,7 +228,6 @@ public class PlayerMenu extends MainMenu {
         boolean playersTurnStillActive = true;
 
         if (player.getTurnScore() == 0) {
-            clearScreen();
             System.out.println(player.getName() + " farkled and will receive a score of zero points for this turn.");
             pauseScreen();
             playersTurnStillActive = false;

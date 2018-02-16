@@ -182,7 +182,9 @@ public class MainMenu {
                         while (line != null) {
                             if (line.contains("Date_")) {
                                 String date = line.split("_")[1];
+                                clearScreen();
                                 System.out.println("This game was last played: " + date);
+                                pauseScreen();
                             } else if (line.contains("Roster_")) {
                                 int numPlayers = Integer.parseInt(line.split("_")[1]);
                                 scoreboard.playerRoster = new Player[numPlayers];
@@ -203,27 +205,25 @@ public class MainMenu {
                         }
 
                     } else {
-                        System.out.println("Press " + numFilesRange + " to proceed.");
+                        clearPrintPauseScreen("Press " + numFilesRange + " to proceed.");
                         loadScoreboard();
                     }
                 } catch (NumberFormatException nfe) {
-                    System.out.println("Press " + numFilesRange + " to proceed.");
+                    clearPrintPauseScreen("Press " + numFilesRange + " to proceed.");
                     loadScoreboard();
                 } catch (FileNotFoundException fnfe) {
-                    System.out.println("Saved game files does not exist. Press " + numFilesRange + " to proceed.");
+                    clearPrintPauseScreen("Saved game files does not exist. Press " + numFilesRange + " to proceed.");
                     loadScoreboard();
                 } catch (IOException ioe) {
-                    System.out.println("Problem loading game.");
+                    clearPrintPauseScreen("Problem loading game.");
                     loadScoreboard();
                 }
             } else {
-                clearScreen();
-                System.out.println("There are currently no saved games to load.");
+                clearPrintPauseScreen("There are currently no saved games to load.");
                 mainMenu();
             }
         } else {
-            clearScreen();
-            System.out.println("There are currently no saved games to load.");
+            clearPrintPauseScreen("There are currently no saved games to load.");
             mainMenu();
         }
 
@@ -277,10 +277,10 @@ public class MainMenu {
 
             bw.close();
         } catch (FileNotFoundException fnfe) {
-            System.out.println("Please enter a valid path and file name");
+            clearPrintPauseScreen("Please enter a valid path and file name");
             saveScoreboard(scoreboard);
         } catch (IOException ioe) {
-            System.out.println("Please enter a valid path and file name");
+            clearPrintPauseScreen("Please enter a valid path and file name");
             saveScoreboard(scoreboard);
         }
 
@@ -295,11 +295,12 @@ public class MainMenu {
         File folder = new File(savedGamesDirectory);
         File[] listOfFiles = folder.listFiles();
 
-        for (File file: listOfFiles) {
-            file.delete();
+        try {
+            for (File file: listOfFiles) { file.delete(); }
+            System.out.println("Saved games deleted");
+        } catch (NullPointerException npe) {
+            clearPrintPauseScreen("There are no saved games to delete.");
         }
-
-        System.out.println("Saved games deleted");
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -329,5 +330,12 @@ public class MainMenu {
     public static void pauseScreen() {
         System.out.println("Press ENTER to continue...");
         String pauseScreen = System.console().readLine();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public static void clearPrintPauseScreen(String messageToPrint) {
+        clearScreen();
+        System.out.println(messageToPrint);
+        pauseScreen();
     }
 }
