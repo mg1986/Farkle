@@ -6,7 +6,7 @@ import java.util.*;
  * Created by matt on 10/16/17.
  */
 
-public class Scoreboard {
+public class Scoreboard extends MainMenu{
 
     public Player[] playerRoster;
     public static final int MIN_SCOREBOARD_SCORE = 1_000;
@@ -18,9 +18,10 @@ public class Scoreboard {
     Scoreboard (int numberOfPlayers) { playerRoster = new Player[numberOfPlayers];}
 
     public void viewScoreboard() {
-        System.out.println(MainMenu.MENU_SEPARATOR);
+        MainMenu.clearScreen();
         for (Player player : playerRoster) {
             System.out.println(player.getName() + SCOREBOARD_SEPARATOR + player.getPlayerScore());
         }
+        MainMenu.pauseScreen();
     }
 }

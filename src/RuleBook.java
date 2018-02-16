@@ -31,6 +31,8 @@ public class RuleBook {
     //------------------------------------------------------------------------------------------------------------------
     // viewGameRules() - Return String of game rules
     public static void viewRulebook() {
-        MainMenu.menuPrint(gameRules);
+        MainMenu.clearScreen();
+        System.out.println(gameRules);
+        MainMenu.pauseScreen();
     }
 }

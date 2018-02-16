@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  *                    the point scoring combinations for each roll until they Farkle or end their turn voluntarily.
  */
 
-public class PlayerMenu {
+public class PlayerMenu extends MainMenu {
 
     // Max number of dice a player can use in a turn
     private static final int MAX_NUM_DICE = 6;
@@ -18,7 +18,7 @@ public class PlayerMenu {
 
     // Dice object that will be rolled throughout the game
     private static final Dice dice = new Dice(MAX_NUM_DICE_SIDES);
-    
+
     //------------------------------------------------------------------------------------------------------------------
     // startPlayerTurn() - Called every time a players turn happens.  Continues until the player Farkles or chooses
     //                     to end their turn and keep their current turn's points.
@@ -27,41 +27,45 @@ public class PlayerMenu {
         boolean playersTurnStillActive = true;
 
         while (playersTurnStillActive) {
+
+            clearScreen();
+
             if (player.getNumDiceInUse() == MAX_NUM_DICE) { rerollDice(player); }
 
             int numDiceInHand = MAX_NUM_DICE - player.getNumDiceInUse();
 
-            MainMenu.menuPrint("It is " + player.getName() + "'s turn\n" +
+            System.out.println("It is " + player.getName() + "'s turn\n" +
                     player.getName() + "'s current score for this turn: " + player.getTurnScore() + "\n" +
-                    player.getName() + "'s current number of dice available to roll: " + numDiceInHand);
+                    player.getName() + "'s current number of dice available to roll: " + numDiceInHand + "\n" +
+                    "------------------------------------------------------------------------");
 
-            MainMenu.menuPrint("1. Roll dice\n" +
+            System.out.println("1. Roll dice\n" +
                     "2. Bank points and end turn\n" +
                     "3. View Scoreboard\n" +
                     "4. View Rules\n" +
                     "5. Save and exit game");
 
-            String menuOption = System.console().readLine();
+            int menuOption = getMenuOptionInt();
 
             switch (menuOption) {
-                case "1":
+                case 1:
                     rollAndAnalyzeDice(player, numDiceInHand);
                     playersTurnStillActive = checkforFarkle(player);
                     break;
-                case "2":
+                case 2:
                     playersTurnStillActive = checkScoreboardAndBankPoints(player, scoreboard);
                     break;
-                case "3":
+                case 3:
                     scoreboard.viewScoreboard();
                     break;
-                case "4":
+                case 4:
                     RuleBook.viewRulebook();
                     break;
-                case "5":
+                case 5:
                     MainMenu.saveScoreboard(scoreboard);
                     break;
                 default:
-                    MainMenu.menuPrint("Please press 1-5 to proceed with turn.");
+                    System.out.println("Please press 1-5 to proceed with turn.");
                     break;
             }
         }
@@ -74,7 +78,6 @@ public class PlayerMenu {
 
         ArrayList<Integer> diceRoll = new ArrayList<Integer>();
         IntStream.range(0, numDice).forEachOrdered(n -> { diceRoll.add(dice.rollDice()); });
-        MainMenu.menuPrint(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()));
 
         return diceRoll;
     }
@@ -90,17 +93,20 @@ public class PlayerMenu {
     //------------------------------------------------------------------------------------------------------------------
     // rerollDice() -
     public static void rerollDice(Player player) {
-        MainMenu.menuPrint(player.getName() + " must roll again since all 6 dice are in play.");
+        clearScreen();
+        System.out.println(player.getName() + " must roll again since all 6 dice are in play.");
         player.resetNumDiceInUse();
         rollAndAnalyzeDice(player, MAX_NUM_DICE);
+        String pauseMenu = System.console().readLine();
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // processDiceRoll() - Analyze Player's dice roll and presents each possble point scoring option possible.  These
     //                       possible point scoring options are then fed into the resolveDiceRoll() method.
-    public static void analyzeDiceRoll(Player player, ArrayList<Integer> roll) {
+    public static void analyzeDiceRoll(Player player, ArrayList<Integer> diceRoll) {
 
-        HashMap<Integer, ArrayList<Integer>> rollHashMap = buildRollHashMap(roll);
+        clearScreen();
+        HashMap<Integer, ArrayList<Integer>> rollHashMap = buildRollHashMap(diceRoll);
 
         Integer rollIndexListSizeOfTwo = 0;
         for (ArrayList<Integer> rollIndexList : rollHashMap.values()) {
@@ -113,8 +119,9 @@ public class PlayerMenu {
         // Analyze roll for 3 pairs of 2 (a, a, b b, c, c) or straight (a, b, c, d, e, f)
         if (straight || threePairsOfTwo) {
             String pointType = (straight) ? "a straight" : "3 pairs of 2";
-            MainMenu.menuPrint(player.getName() + " rolled " + pointType + ". This is worth 1,500 points");
+            System.out.println(player.getName() + " rolled " + pointType + ". This is worth 1,500 points");
             player.setTurnScore(1500);
+            pauseScreen();
             rerollDice(player);
         }  else { // Check for >= 3 of a Kind, Ones, and Fives
 
@@ -130,7 +137,7 @@ public class PlayerMenu {
             });
 
             if (diceRollMenu.size() > 0) { // If players roll contains any scoring combinations, resolve dice roll.
-                resolveDiceRoll(player, diceRollMenu);
+                resolveDiceRoll(player, diceRollMenu, diceRoll);
             } else { // Else if player's dice roll was a farkle, reset all turn variables end turn.
                 player.resetPlayerTurn();
             }
@@ -142,18 +149,22 @@ public class PlayerMenu {
     //                     and presents them to the Player.  They may choose what point scoring options to keep and
     //                     discard for every roll.  The point scoring options that are kept are then added to the
     //                     Player's turnScore variable.
-    public static void resolveDiceRoll(Player player, ArrayList<ScoreVariant> diceRollMenu) {
+    public static void resolveDiceRoll(Player player, ArrayList<ScoreVariant> diceRollMenu, ArrayList<Integer> diceRoll) {
 
         ArrayList<ScoreVariant> diceRollMenuReset = new ArrayList<ScoreVariant>(diceRollMenu);
         boolean rollResolved = false;
 
         while (!rollResolved) {
 
-            Integer diceRollMenuSize = diceRollMenu.size();
-            String resolveRollID = Integer.toString(diceRollMenuSize + 1);
-            String keepAllScoreVariants = Integer.toString(diceRollMenuSize + 2);
+            clearScreen();
+            System.out.println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
+                    "------------------------------------------------------------------------");
 
-            MainMenu.menuPrint("Select from the following scoring combinations to keep for this roll:");
+            int diceRollMenuSize = diceRollMenu.size();
+            int resolveRollID = diceRollMenuSize + 1;
+            int keepAllScoreVariants = diceRollMenuSize + 2;
+
+            System.out.println("Select from the following scoring combinations to keep for this roll:");
             for (int idx = 0; idx < diceRollMenuSize; idx++) {
                 String scoreType = diceRollMenu.get(idx).scoreType;
                 Integer scoreAmount = diceRollMenu.get(idx).scoreAmount;
@@ -163,33 +174,26 @@ public class PlayerMenu {
             System.out.println(resolveRollID + ". Keep current point total and resolve current roll");
             System.out.println(keepAllScoreVariants + ". Keep all scoring options and resolve current roll");
 
-            String menuOption = System.console().readLine();
-            Integer menuOptionIndex = - 1;
+            int menuOption = getMenuOptionInt();
+            int menuOptionListIndex = menuOption - 1;
 
-            try {
-                menuOptionIndex = Integer.parseInt(menuOption);
-                menuOptionIndex = menuOptionIndex - 1;
-            } catch (NumberFormatException nfe) {
-                MainMenu.menuPrint("Please enter a number from the above menu options");
-                resolveDiceRoll(player, diceRollMenu);
-            }
-
-            if (menuOption.equals(resolveRollID)) {
+            if (menuOption == resolveRollID) {
                 System.out.println("Do you want to keep the current point total and resolve current roll? y/n");
-                menuOption = System.console().readLine();
+                Scanner menuScanner = new Scanner(System.in);
+                String resolveRollInput = menuScanner.next();
 
-                switch(menuOption) {
+                switch(resolveRollInput) {
                     case "y":
                         rollResolved = true;
                         break;
                     case "n":
-                        resolveDiceRoll(player, diceRollMenuReset);
+                        resolveDiceRoll(player, diceRollMenuReset, diceRoll);
                         break;
                     default:
                         System.out.println("Please enter y/n");
                         break;
                 }
-            } else if (menuOption.equals(keepAllScoreVariants)) {
+            } else if (menuOption == keepAllScoreVariants) {
 
                 for (ScoreVariant scoreVariant : diceRollMenu ) {
                     player.setTurnScore(scoreVariant.scoreAmount);
@@ -198,9 +202,9 @@ public class PlayerMenu {
 
                 rollResolved = true;
 
-            } else if (menuOptionIndex < diceRollMenuSize) {
+            } else if (menuOptionListIndex < diceRollMenuSize) {
 
-                ScoreVariant scoreVariant = diceRollMenu.get(menuOptionIndex);
+                ScoreVariant scoreVariant = diceRollMenu.get(menuOptionListIndex);
                 player.setTurnScore(scoreVariant.scoreAmount);
                 player.setNumDiceInUse(scoreVariant.scoreIndices.size());
                 diceRollMenu.remove(scoreVariant);
@@ -208,8 +212,8 @@ public class PlayerMenu {
                 if (player.getNumDiceInUse() == MAX_NUM_DICE) rerollDice(player);
 
             } else {
-                MainMenu.menuPrint("Please enter ID of scoring option");
-                resolveDiceRoll(player, diceRollMenu);
+                System.out.println("Please enter ID of scoring option from menu");
+                resolveDiceRoll(player, diceRollMenu, diceRoll);
             }
         }
     }
@@ -221,7 +225,9 @@ public class PlayerMenu {
         boolean playersTurnStillActive = true;
 
         if (player.getTurnScore() == 0) {
-            MainMenu.menuPrint(player.getName() + " farkled and will receive a score of zero points for this turn.");
+            clearScreen();
+            System.out.println(player.getName() + " farkled and will receive a score of zero points for this turn.");
+            pauseScreen();
             playersTurnStillActive = false;
         }
 
@@ -232,17 +238,19 @@ public class PlayerMenu {
     // checkScoreboardAndBankPoints() -
     public static boolean checkScoreboardAndBankPoints(Player player, Scoreboard scoreboard) {
 
+        clearScreen();
         boolean playersTurnStillActive = true;
 
         if (player.getOnScoreboard() || player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
-            MainMenu.menuPrint(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
+            System.out.println(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
                     "added to the scoreboard!");
             playersTurnStillActive = false;
         } else {
-            MainMenu.menuPrint("You can only end your turn after reaching 1,000 points to get on the \n" +
+            System.out.println("You can only end your turn after reaching 1,000 points to get on the \n" +
                     "scoreboard or already having points on the scoreboard.");
         }
 
+        pauseScreen();
         return playersTurnStillActive;
     }
 

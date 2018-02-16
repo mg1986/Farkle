@@ -1,6 +1,7 @@
 import java.io.*;
 import java.lang.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * MainMenu class - Starting menu for the game. Allows players to:
@@ -12,9 +13,6 @@ import java.util.*;
  */
 
 public class MainMenu {
-
-    // Used to visually separate text in menuPrint() method
-    public static final String MENU_SEPARATOR = "---------------------------------------------------------------------";
 
     // File extension for saved games
     private static final String FILE_EXTENSION = ".farkle";
@@ -33,37 +31,38 @@ public class MainMenu {
     //                     saved games, view game rules, and exit menu.
     public static void mainMenu() {
 
-        menuPrint("Welcome to Farkle. Pick from the following options: \n" +
+        clearScreen();
+        System.out.println("Welcome to Farkle. Pick from the following options: \n" +
                 "1. New Game\n" +
                 "2. Load Game\n" +
                 "3. Clear Saved Games\n" +
                 "4. View Rules\n" +
                 "5. Exit");
 
-        String menuOption = System.console().readLine();
+        int menuOption = getMenuOptionInt();
 
         switch (menuOption) {
-            case "1":  // New game
+            case 1:  // New game
                 Scoreboard newScoreboard = createScoreboard();
                 newGame(newScoreboard);
                 break;
-            case "2": // Load game
+            case 2: // Load game
                 Scoreboard loadedScoreboard = loadScoreboard();
                 newGame(loadedScoreboard);
                 break;
-            case "3":  // Delete saved games
+            case 3:  // Delete saved games
                 deleteSavedGames();
                 mainMenu();
                 break;
-            case "4": // View game rules
+            case 4: // View game rules
                 RuleBook.viewRulebook();
                 mainMenu();
                 break;
-            case "5":  // Exit game
-                menuPrint("Thank you for playing Farkle!");
+            case 5:  // Exit game
+                System.out.println("Thank you for playing Farkle!");
                 System.exit(0);
             default:
-                menuPrint("Please press 1-5 to proceed.");
+                System.out.println("Please press 1-5 to proceed.");
                 mainMenu();
                 break;
         }
@@ -91,9 +90,10 @@ public class MainMenu {
                 player.setPlayerScore(turnScore);
 
                 if (player.getPlayerScore() >= scoreboard.MAX_SCORE) {
-                    gameOver = true;
-                    menuPrint(player.getName() + " won the game with a score of " +
+                    clearScreen();
+                    System.out.println(player.getName() + " won the game with a score of " +
                             String.format("%,d", player.getPlayerScore()) + " points!");
+                    gameOver = true;
                 }
 
                 player.resetPlayerTurn();
@@ -106,11 +106,12 @@ public class MainMenu {
     //                      console.
     public static Scoreboard createScoreboard() {
 
-        Integer numPlayers = askHowManyPlayers();
+        int numPlayers = askHowManyPlayers();
 
         Scoreboard scoreboard = new Scoreboard(numPlayers);
 
-        menuPrint("Enter the name for each player: \n");
+        clearScreen();
+        System.out.println("Enter the name for each player: \n");
         for (int i = 0; i < numPlayers; i++) {
             String name = System.console().readLine();
             Player player = new Player(name);
@@ -124,18 +125,12 @@ public class MainMenu {
     // askHowManyPlayers() -
     public static Integer askHowManyPlayers() {
 
-        menuPrint("Enter the number of players (must 2 or more players): ");
-        Integer numPlayers = 0;
-
-        try {
-            numPlayers = Integer.parseInt(System.console().readLine());
-        } catch (NumberFormatException nfe) {
-            menuPrint("Please enter the number of players");
-            numPlayers = askHowManyPlayers();
-        }
+        clearScreen();
+        System.out.println("Enter the number of players (must 2 or more players): ");
+        Integer numPlayers = getMenuOptionInt();
 
         if (numPlayers < 2) {
-            menuPrint("Farkle requires a minimum of 2 players");
+            System.out.println("Farkle requires a minimum of 2 players");
             numPlayers = askHowManyPlayers();
         }
 
@@ -164,7 +159,8 @@ public class MainMenu {
                     numFilesRange = "1";
                 }
 
-                menuPrint("Pick a saved game file to load game.");
+                clearScreen();
+                System.out.println("Pick a saved game file to load game.");
 
                 for (int idx = 0; idx < listOfFiles.length; idx++) {
                     File file = listOfFiles[idx];
@@ -186,7 +182,7 @@ public class MainMenu {
                         while (line != null) {
                             if (line.contains("Date_")) {
                                 String date = line.split("_")[1];
-                                menuPrint("This game was last played: " + date);
+                                System.out.println("This game was last played: " + date);
                             } else if (line.contains("Roster_")) {
                                 int numPlayers = Integer.parseInt(line.split("_")[1]);
                                 scoreboard.playerRoster = new Player[numPlayers];
@@ -207,25 +203,27 @@ public class MainMenu {
                         }
 
                     } else {
-                        menuPrint("Press " + numFilesRange + " to proceed.");
+                        System.out.println("Press " + numFilesRange + " to proceed.");
                         loadScoreboard();
                     }
                 } catch (NumberFormatException nfe) {
-                    menuPrint("Press " + numFilesRange + " to proceed.");
+                    System.out.println("Press " + numFilesRange + " to proceed.");
                     loadScoreboard();
                 } catch (FileNotFoundException fnfe) {
-                    menuPrint("Saved game files does not exist. Press " + numFilesRange + " to proceed.");
+                    System.out.println("Saved game files does not exist. Press " + numFilesRange + " to proceed.");
                     loadScoreboard();
                 } catch (IOException ioe) {
-                    menuPrint("Problem loading game.");
+                    System.out.println("Problem loading game.");
                     loadScoreboard();
                 }
             } else {
-                menuPrint("There are currently no saved games to load.");
+                clearScreen();
+                System.out.println("There are currently no saved games to load.");
                 mainMenu();
             }
         } else {
-            menuPrint("There are currently no saved games to load.");
+            clearScreen();
+            System.out.println("There are currently no saved games to load.");
             mainMenu();
         }
 
@@ -237,7 +235,8 @@ public class MainMenu {
     //                    chooses to save the game
     public static void saveScoreboard(Scoreboard scoreboard) {
 
-        menuPrint("Thank you for playing Farkle!");
+        clearScreen();
+        System.out.println("Thank you for playing Farkle!");
 
         try {
 
@@ -246,7 +245,7 @@ public class MainMenu {
 
             if (!exists) { savedGamesFolder.mkdirs(); }
 
-            menuPrint("Enter a name for save game file: ");
+            System.out.println("Enter a name for save game file: ");
             String saveFile = System.console().readLine() + FILE_EXTENSION;
             saveFile = savedGamesDirectory + File.separatorChar + saveFile;
             BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
@@ -278,10 +277,10 @@ public class MainMenu {
 
             bw.close();
         } catch (FileNotFoundException fnfe) {
-            menuPrint("Please enter a valid path and file name");
+            System.out.println("Please enter a valid path and file name");
             saveScoreboard(scoreboard);
         } catch (IOException ioe) {
-            menuPrint("Please enter a valid path and file name");
+            System.out.println("Please enter a valid path and file name");
             saveScoreboard(scoreboard);
         }
 
@@ -291,7 +290,8 @@ public class MainMenu {
     //------------------------------------------------------------------------------------------------------------------
     // deleteSavedGames() - Deletes all .farkle files saved in the savedGamesDirectory, if one exists.
     public static void deleteSavedGames() {
-        menuPrint("Deleting saved games....");
+        clearScreen();
+        System.out.println("Deleting saved games....");
         File folder = new File(savedGamesDirectory);
         File[] listOfFiles = folder.listFiles();
 
@@ -299,13 +299,35 @@ public class MainMenu {
             file.delete();
         }
 
-        menuPrint("Saved games deleted");
+        System.out.println("Saved games deleted");
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // menuPrint() - Prints input String to console with a visual line separator
-    public static void menuPrint(String s) {
-        System.out.println(MENU_SEPARATOR);
-        System.out.println(s);
+    public static int getMenuOptionInt() {
+
+        // Scanner for menu input
+        Scanner menuScanner = new Scanner(System.in);
+
+        int menuOption = 0;
+
+        try {
+            menuOption = Integer.parseInt(menuScanner.next());
+        } catch (NumberFormatException  ime) {
+            System.out.println("Please enter a valid number and press ENTER to continue");
+            menuOption = getMenuOptionInt();
+        }
+
+        return menuOption;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public static void clearScreen() {
+        IntStream.range(0, 50).forEach(n -> { System.out.println(); });
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public static void pauseScreen() {
+        System.out.println("Press ENTER to continue...");
+        String pauseScreen = System.console().readLine();
     }
 }
