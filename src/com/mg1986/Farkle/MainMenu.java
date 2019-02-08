@@ -1,3 +1,5 @@
+package com.mg1986.Farkle;
+
 import java.io.*;
 import java.lang.*;
 import java.util.*;

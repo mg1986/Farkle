@@ -1,3 +1,5 @@
+package com.mg1986.Farkle;
+
 /**
  * Rulebook class - Rulebook for game of Farkle
  */
