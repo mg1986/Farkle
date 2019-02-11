@@ -1,16 +1,19 @@
-package com.mg1986.Farkle;
+package com.mg1986.farkle;
 
-import java.io.*;
-import java.lang.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
+import static com.mg1986.farkle.Application.*;
+
 /**
- * PlayerMenu class - Class that handles the logic of a Player's turn.  This involves rolling dice and then resolving
+ * PlayerTurn class - Class that handles the logic of a Player's turn.  This involves rolling dice and then resolving
  *                    the point scoring combinations for each roll until they Farkle or end their turn voluntarily.
  */
 
-public class PlayerMenu extends MainMenu {
+public class PlayerTurn {
 
     // Max number of dice a player can use in a turn
     private static final int MAX_NUM_DICE = 6;
@@ -64,7 +67,7 @@ public class PlayerMenu extends MainMenu {
                     RuleBook.viewRulebook();
                     break;
                 case 5:
-                    MainMenu.saveScoreboard(scoreboard);
+                    Application.saveScoreboard(scoreboard);
                     break;
                 default:
                     System.out.println("Please press 1-5 to proceed with turn.");
@@ -129,7 +132,7 @@ public class PlayerMenu extends MainMenu {
             rerollDice(player);
         }  else { // Check for >= 3 of a Kind, Ones, and Fives
 
-            ArrayList<ScoreVariant> diceRollMenu = new ArrayList<ScoreVariant>();
+            ArrayList<ScoreOption> diceRollMenu = new ArrayList<ScoreOption>();
 
             rollHashMap.forEach((rollNum, rollIndexList) -> {
                 Integer rollIndexListSize = rollIndexList.size();
@@ -156,9 +159,9 @@ public class PlayerMenu extends MainMenu {
     //                     and presents them to the Player.  They may choose what point scoring options to keep and
     //                     discard for every roll.  The point scoring options that are kept are then added to the
     //                     Player's turnScore variable.
-    public static void resolveDiceRoll(Player player, ArrayList<ScoreVariant> diceRollMenu, ArrayList<Integer> diceRoll) {
+    public static void resolveDiceRoll(Player player, ArrayList<ScoreOption> diceRollMenu, ArrayList<Integer> diceRoll) {
 
-        ArrayList<ScoreVariant> diceRollMenuReset = new ArrayList<ScoreVariant>(diceRollMenu);
+        ArrayList<ScoreOption> diceRollMenuReset = new ArrayList<ScoreOption>(diceRollMenu);
         boolean rollResolved = false;
 
         while (!rollResolved) {
@@ -202,19 +205,19 @@ public class PlayerMenu extends MainMenu {
                 }
             } else if (menuOption == keepAllScoreVariants) {
 
-                for (ScoreVariant scoreVariant : diceRollMenu ) {
-                    player.setTurnScore(scoreVariant.scoreAmount);
-                    player.setNumDiceInUse(scoreVariant.scoreIndices.size());
+                for (ScoreOption scoreOption : diceRollMenu ) {
+                    player.setTurnScore(scoreOption.scoreAmount);
+                    player.setNumDiceInUse(scoreOption.scoreIndices.size());
                 }
 
                 rollResolved = true;
 
             } else if (menuOptionListIndex < diceRollMenuSize) {
 
-                ScoreVariant scoreVariant = diceRollMenu.get(menuOptionListIndex);
-                player.setTurnScore(scoreVariant.scoreAmount);
-                player.setNumDiceInUse(scoreVariant.scoreIndices.size());
-                diceRollMenu.remove(scoreVariant);
+                ScoreOption scoreOption = diceRollMenu.get(menuOptionListIndex);
+                player.setTurnScore(scoreOption.scoreAmount);
+                player.setNumDiceInUse(scoreOption.scoreIndices.size());
+                diceRollMenu.remove(scoreOption);
 
                 if (player.getNumDiceInUse() == MAX_NUM_DICE) rerollDice(player);
 
@@ -275,8 +278,8 @@ public class PlayerMenu extends MainMenu {
     //                       4  ----- [2]
     //                       5  ----- [3]
     //                       6  ----- [4, 5]
-    //                      This hashmap is then used to calculate all of that rolls scoring variantions and the
-    //                      correpsoning index values of the dice they involve.
+    //                      This hashmap is then used to calculate all of that rolls scoring variations and the
+    //                      correpsonding index values of the dice they involve.
     public static HashMap<Integer, ArrayList<Integer>> buildRollHashMap (ArrayList<Integer> roll) {
 
         HashMap<Integer, ArrayList<Integer>> rollHashMap = new HashMap<Integer, ArrayList<Integer>>();
@@ -298,9 +301,9 @@ public class PlayerMenu extends MainMenu {
 
     //------------------------------------------------------------------------------------------------------------------
     // calculateThreeOfKindOrGreater() - Calculates the point value for a scoring variation of 3 of a kind or more
-    //                                   based on the formula in the Rulebook. Creates and adds a ScoreVariant object
+    //                                   based on the formula in the Rulebook. Creates and adds a ScoreOption object
     //                                   to the DiceRollMenu ArrayList.
-    public static void calculateThreeOfKindOrGreater (ArrayList<ScoreVariant> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
+    public static void calculateThreeOfKindOrGreater (ArrayList<ScoreOption> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
 
         Integer rollIndexListSize = rollIndexList.size();
         String pointType = rollIndexListSize + " Of A Kind: " + rollNum;
@@ -312,14 +315,14 @@ public class PlayerMenu extends MainMenu {
             }
         }
 
-        ScoreVariant scoreVariant = new ScoreVariant(pointType, pointsAmount, rollIndexList);
-        diceRollMenu.add(scoreVariant);
+        ScoreOption scoreOption = new ScoreOption(pointType, pointsAmount, rollIndexList);
+        diceRollMenu.add(scoreOption);
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // calculateOneOrFive - Calculates the point value for a scoring variation a single 1 or 5 value being rolled.
-    //                      Creates and adds a ScoreVariant object to the DiceRollMenu ArrayList.
-    public static void calculateOneOrFive (ArrayList<ScoreVariant> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
+    //                      Creates and adds a ScoreOption object to the DiceRollMenu ArrayList.
+    public static void calculateOneOrFive (ArrayList<ScoreOption> diceRollMenu, Integer rollNum, ArrayList<Integer> rollIndexList) {
 
         Integer rollIndexListSize = rollIndexList.size();
         String pointType = (rollNum == 1) ? "One" : "Five";
@@ -328,8 +331,8 @@ public class PlayerMenu extends MainMenu {
         for (int idx = 0; idx < rollIndexListSize; idx++) {
             ArrayList<Integer> scoreVariantRollIndex = new ArrayList<Integer>();
             scoreVariantRollIndex.add(rollIndexList.get(idx));
-            ScoreVariant scoreVariant = new ScoreVariant(pointType, pointAmount, scoreVariantRollIndex);
-            diceRollMenu.add(scoreVariant);
+            ScoreOption scoreOption = new ScoreOption(pointType, pointAmount, scoreVariantRollIndex);
+            diceRollMenu.add(scoreOption);
         }
     }
 }

@@ -1,19 +1,19 @@
-package com.mg1986.Farkle;
+package com.mg1986.farkle;
 
 import java.util.*;
 
 /**
- * ScoreVariant - Object holding the point amount, scoring combination, type, and the dice indexes involved
+ * ScoreOption - Object holding the point amount, scoring combination, type, and the dice indexes involved
  *                with te scoring combination from the roll int[]
  */
 
-public class ScoreVariant {
+public class ScoreOption {
 
     public String scoreType;
     public Integer scoreAmount;
     public ArrayList<Integer> scoreIndices;
 
-    public ScoreVariant (String type, Integer amount, ArrayList<Integer> indices) {
+    public ScoreOption(String type, Integer amount, ArrayList<Integer> indices) {
         this.scoreType = type;
         this.scoreAmount = amount;
         this.scoreIndices = indices;

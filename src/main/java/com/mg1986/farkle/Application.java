@@ -1,4 +1,4 @@
-package com.mg1986.Farkle;
+package com.mg1986.farkle;
 
 import java.io.*;
 import java.lang.*;
@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 /**
- * MainMenu class - Starting menu for the game. Allows players to:
+ * Application class - Starting menu for the game. Allows players to:
  *                      1. Start new game
  *                      2. Continue existing game
  *                      3. Delete saved games (if they exist)
@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  *                      5. Exit game
  */
 
-public class MainMenu {
+public class Application {
 
     // File extension for saved games
     private static final String FILE_EXTENSION = ".farkle";
@@ -22,9 +22,15 @@ public class MainMenu {
     // Directory where games are saved too
     private static String savedGamesDirectory = System.getProperty("user.dir") + File.separatorChar + "saved_games";
 
+    private static List<String> playerNames;
+
+    private static Scanner scanner;
+
     //------------------------------------------------------------------------------------------------------------------
     // main() - Calls the mainMenu() method to begin the game.
     public static void main(String[] args) {
+
+        scanner = new Scanner(System.in);
         mainMenu();
     }
 
@@ -82,7 +88,7 @@ public class MainMenu {
         while (!gameOver) {
             for (Player player : scoreboard.playerRoster) {
                 player.setIsCurrentTurn(true);
-                PlayerMenu.startPlayerTurn(scoreboard, player);
+                PlayerTurn.startPlayerTurn(scoreboard, player);
                 int turnScore = player.getTurnScore();
 
                 if (player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
@@ -104,18 +110,34 @@ public class MainMenu {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    // checkName()
+    //
+    public static String checkName(String name) {
+
+        playerNames.add(name);
+        int nameCounter = Collections.frequency(playerNames, name);
+        if (nameCounter > 1) {
+            nameCounter = Collections.frequency(playerNames, name);
+            name = name + "-" + Integer.toString(nameCounter);
+        }
+
+        return name;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     // createScoreboard() - Creates a Scoreboard object and populates it with Player objects based off input from
     //                      console.
     public static Scoreboard createScoreboard() {
 
         int numPlayers = askHowManyPlayers();
+        playerNames = new ArrayList<>();
 
         Scoreboard scoreboard = new Scoreboard(numPlayers);
 
         clearScreen();
         System.out.println("Enter the name for each player: \n");
         for (int i = 0; i < numPlayers; i++) {
-            String name = System.console().readLine();
+            String name = checkName(scanner.next());
             Player player = new Player(name);
             scoreboard.playerRoster[i] = player;
         }
@@ -155,7 +177,7 @@ public class MainMenu {
 
                 try {
 
-                    String menuOption = System.console().readLine();
+                    String menuOption = scanner.next();
                     int fileArrayIndex = Integer.parseInt(menuOption) - 1;
                     boolean inFileArray = (fileArrayIndex >= 0) && (fileArrayIndex < listOfFiles.length);
 
@@ -294,13 +316,10 @@ public class MainMenu {
     //                      parsed.
     public static int getMenuOptionInt() {
 
-        // Scanner for menu input
-        Scanner menuScanner = new Scanner(System.in);
-
         int menuOption = 0;
 
         try {
-            menuOption = Integer.parseInt(menuScanner.next());
+            menuOption = Integer.parseInt(scanner.next());
         } catch (NumberFormatException  ime) {
             System.out.println("Please enter a valid number and press ENTER to continue");
             menuOption = getMenuOptionInt();
@@ -335,12 +354,17 @@ public class MainMenu {
     //------------------------------------------------------------------------------------------------------------------
     // pauseScreen() - Displays a message and then waits for user to press ENTER key to proceed with game.
     public static void pauseScreen() {
+        System.out.println("-----------------------------------------------");
         System.out.println("Press ENTER to continue...");
-        String pauseScreen = System.console().readLine();
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // clearPrintPauseScreen() - Clears screen, prints a message, and teh waits for user to press ENTER to proceed with
+    // clearPrintPauseScreen() - Clears screen, prints a message, and then waits for user to press ENTER to proceed with
     //                           game.
     public static void clearPrintPauseScreen(String messageToPrint) {
         clearScreen();

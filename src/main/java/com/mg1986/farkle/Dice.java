@@ -1,4 +1,4 @@
-package com.mg1986.Farkle;
+package com.mg1986.farkle;
 
 import java.security.SecureRandom;
 
@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 
 public class Dice {
 
-    // SucureRandom object used to generate pseudo random numbers
+    // SecureRandom object used to generate pseudo random numbers
     private static final SecureRandom secureRandom = new SecureRandom();
 
     // Number of sides Dice object has

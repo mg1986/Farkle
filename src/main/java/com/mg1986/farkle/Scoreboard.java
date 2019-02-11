@@ -1,8 +1,6 @@
-package com.mg1986.Farkle;
+package com.mg1986.farkle;
 
-import java.io.*;
 import java.lang.*;
-import java.util.*;
 
 /**
  * Scoreboard class - Scoreboard for the game. Keeps track of all players
@@ -28,13 +26,12 @@ public class Scoreboard {
     //------------------------------------------------------------------------------------------------------------------
     // viewScoreboard() - Prints player name and score for every player in player roster to the console.
     public void viewScoreboard() {
-        MainMenu.clearScreen();
+        Application.clearScreen();
         for (Player player : playerRoster) {
             String stringPadding = Integer.toString(50 - player.getName().length());
             String playerScore = Integer.toString(player.getPlayerScore());
             System.out.printf("%s %" + stringPadding + "s\n", player.getName(), playerScore);
         }
-        System.out.println("---------------------------------------------------");
-        MainMenu.pauseScreen();
+        Application.pauseScreen();
     }
 }
