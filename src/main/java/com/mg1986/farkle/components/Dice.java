@@ -1,4 +1,4 @@
-package com.mg1986.farkle;
+package com.mg1986.farkle.components;
 
 import java.security.SecureRandom;
 
@@ -15,7 +15,7 @@ public class Dice {
     private Integer numSides;
 
     // Dice class instance constructor - Takes the number of sides the dice will have as input
-    Dice(Integer numDiceSides) {
+    public Dice(Integer numDiceSides) {
         this.numSides = numDiceSides;
     }
 

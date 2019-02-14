@@ -1,4 +1,6 @@
-package com.mg1986.farkle;
+package com.mg1986.farkle.components;
+
+import com.mg1986.farkle.managers.MenuManager;
 
 /**
  * Rulebook class - Rulebook for game of Farkle
@@ -26,17 +28,17 @@ public class RuleBook {
             "---------------------------- \n" +
             "One - 100 points\n" +
             "Five - 50 points\n" +
-            "3-6 of a Kind - Three 1's equals 1,000 points, every additional 1 after that doubles the points.\n" +
+            "3, 4, 5, or 6 of a Kind - Three 1's equals 1,000 points, every additional 1 after that doubles the points.\n" +
             "                Three of anything other than a 1 equals that number multiplied by 100, every additional\n" +
             "                dice of that number after that doubles the point total.\n" +
             "Three pairs of Two - 1,500 points\n" +
-            "Straight - 1,500 points\n ";
+            "Straight - 3,000 points\n ";
 
     //------------------------------------------------------------------------------------------------------------------
     // viewGameRules() - Return String of game rules
     public static void viewRulebook() {
-        Application.clearScreen();
+        MenuManager.clearScreen();
         System.out.println(gameRules);
-        Application.pauseScreen();
+        MenuManager.pauseScreen();
     }
 }

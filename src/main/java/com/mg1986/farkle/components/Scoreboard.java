@@ -1,4 +1,7 @@
-package com.mg1986.farkle;
+package com.mg1986.farkle.components;
+
+import com.mg1986.farkle.components.Player;
+import com.mg1986.farkle.managers.MenuManager;
 
 import java.lang.*;
 
@@ -17,21 +20,18 @@ public class Scoreboard {
     // Number of points required to win game
     public static final int MAX_SCORE = 10_000;
 
-    // Scoreboard no args constructor
-    Scoreboard () {}
-
     // Scoreboard constructor - Takes the number of players the scoreboard will have and creates the player roster array
-    Scoreboard (int numberOfPlayers) { playerRoster = new Player[numberOfPlayers];}
+    public Scoreboard (int numberOfPlayers) { playerRoster = new Player[numberOfPlayers];}
 
     //------------------------------------------------------------------------------------------------------------------
-    // viewScoreboard() - Prints player name and score for every player in player roster to the console.
-    public void viewScoreboard() {
-        Application.clearScreen();
+    // printScoreboard() - Prints player name and score for every player in player roster to the console.
+    public void printScoreboard() {
+        MenuManager.clearScreen();
         for (Player player : playerRoster) {
             String stringPadding = Integer.toString(50 - player.getName().length());
             String playerScore = Integer.toString(player.getPlayerScore());
             System.out.printf("%s %" + stringPadding + "s\n", player.getName(), playerScore);
         }
-        Application.pauseScreen();
+        MenuManager.pauseScreen();
     }
 }
