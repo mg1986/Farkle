@@ -25,7 +25,7 @@ public class Player {
     private boolean isCurrentTurn;
 
     // Player constructor -  Create new Player object for new game
-    Player (String name) {
+    public Player (String name) {
         playerName = name;
         playerScore = 0;
         turnScore = 0;
@@ -35,7 +35,7 @@ public class Player {
     }
 
     // Player constructor -  Create Player object for game loaded from save file
-    Player (String name, int score, int numDice, boolean onBoard) {
+    public Player (String name, int score, int numDice, boolean onBoard) {
         playerName = name;
         playerScore = score;
         turnScore = 0;

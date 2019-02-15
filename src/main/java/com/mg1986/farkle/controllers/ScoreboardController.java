@@ -1,29 +1,36 @@
-package com.mg1986.farkle.managers;
+package com.mg1986.farkle.controllers;
 
 import com.mg1986.farkle.components.Player;
 import com.mg1986.farkle.components.Scoreboard;
 import com.mg1986.farkle.ui.MainMenu;
-
+import static com.mg1986.farkle.controllers.MenuController.*;
+import static com.mg1986.farkle.controllers.GameController.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class ScoreboardManager {
+public class ScoreboardController {
+
+    public Scoreboard scoreboard;
+
+    public ScoreboardController() {
+        scoreboard = createScoreboard();
+    }
 
     // File extension for saved games
-    private static final String FILE_EXTENSION = ".farkle";
+    public static final String FILE_EXTENSION = ".farkle";
 
     //------------------------------------------------------------------------------------------------------------------
     // printScoreboard() - Prints player name and score for every player in player roster to the console.
     public void printScoreboard() {
-        MenuManager.clearScreen();
-        for (Player player : playerRoster) {
+        clearScreen();
+        for (Player player : scoreboard.playerRoster) {
             String stringPadding = Integer.toString(50 - player.getName().length());
             String playerScore = Integer.toString(player.getPlayerScore());
             System.out.printf("%s %" + stringPadding + "s\n", player.getName(), playerScore);
         }
-        MenuManager.pauseScreen();
+        pauseScreen();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -33,20 +40,20 @@ public class ScoreboardManager {
     //                                  haven't reached any of the criteria, they must keep rolling until they reach
     //                                  >= 1,000 points or Farkle to end their turn.
     public static boolean checkScoreboard(Player player, Scoreboard scoreboard) {
-
-        MenuManager.clearScreen();
+        println(scoreboard.toString());
+        clearScreen();
         boolean playersTurnStillActive = true;
 
         if (player.getOnScoreboard() || player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
-            System.out.println(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
+            println(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
                     "added to the scoreboard!");
             playersTurnStillActive = false;
         } else {
-            System.out.println("You can only end your turn after reaching 1,000 points to get on the \n" +
+            println("You can only end your turn after reaching 1,000 points to get on the \n" +
                     "scoreboard or already having points on the scoreboard.");
         }
 
-        MenuManager.pauseScreen();
+        pauseScreen();
         return playersTurnStillActive;
     }
 
@@ -59,50 +66,26 @@ public class ScoreboardManager {
     //                      console.
     public static Scoreboard createScoreboard() {
 
-        int numPlayers = askHowManyPlayers();
-        playerNames = new ArrayList<>();
+        int numPlayers = MainMenu.askHowManyPlayers();
+        ArrayList<String> playerNames = new ArrayList<>();
 
         Scoreboard scoreboard = new Scoreboard(numPlayers);
 
-        MenuManager.clearScreen();
-        System.out.println("Enter the name for each player: \n");
+        clearScreen();
+        println("Enter the name for each player: \n");
         for (int i = 0; i < numPlayers; i++) {
-            String name = checkName(scanner.next());
+            String name = checkNameInRoster(playerNames, scanner.next());
             Player player = new Player(name);
             scoreboard.playerRoster[i] = player;
         }
 
+
         return scoreboard;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // checkScoreboardAndBankPoints() - Checks to see if player of current turn is on scoreboard already, or they have
-    //                                  scored >= 1,000 points on their current turn.  If they meet any of these criteria,
-    //                                  they can end their turn at any time and bank their current point total.  If they
-    //                                  haven't reached any of the criteria, they must keep rolling until they reach
-    //                                  >= 1,000 points or Farkle to end their turn.
-    public static boolean checkScoreboardAndBankPoints(Player player, Scoreboard scoreboard) {
-
-        MenuManager.clearScreen();
-        boolean playersTurnStillActive = true;
-
-        if (player.getOnScoreboard() || player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
-            System.out.println(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
-                    "added to the scoreboard!");
-            playersTurnStillActive = false;
-        } else {
-            System.out.println("You can only end your turn after reaching 1,000 points to get on the \n" +
-                    "scoreboard or already having points on the scoreboard.");
-        }
-
-        MenuManager.pauseScreen();
-        return playersTurnStillActive;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // checkName()
+    // checkNameInRoster()
     //
-    public static String checkName(String name) {
+    public static String checkNameInRoster(ArrayList<String> playerNames, String name) {
 
         playerNames.add(name);
         int nameCounter = Collections.frequency(playerNames, name);
@@ -114,6 +97,29 @@ public class ScoreboardManager {
         return name;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // checkScoreboardAndBankPoints() - Checks to see if player of current turn is on scoreboard already, or they have
+    //                                  scored >= 1,000 points on their current turn.  If they meet any of these criteria,
+    //                                  they can end their turn at any time and bank their current point total.  If they
+    //                                  haven't reached any of the criteria, they must keep rolling until they reach
+    //                                  >= 1,000 points or Farkle to end their turn.
+    public static boolean checkScoreboardAndBankPoints(Player player, Scoreboard scoreboard) {
+
+        clearScreen();
+        boolean playersTurnStillActive = true;
+
+        if (player.getOnScoreboard() || player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
+            println(player.getName() + " ended their turn with " + player.getTurnScore() + " points " +
+                    "added to the scoreboard!");
+            playersTurnStillActive = false;
+        } else {
+            println("You can only end your turn after reaching 1,000 points to get on the \n" +
+                    "scoreboard or already having points on the scoreboard.");
+        }
+
+        pauseScreen();
+        return playersTurnStillActive;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // loadScoreboard - Takes a user provided .farkle file of a previous game, and turns it into a Scoreboard object
@@ -122,7 +128,7 @@ public class ScoreboardManager {
 
         Scoreboard scoreboard = new Scoreboard();
 
-        File savedGamesFolder = new File(GameManager.savedGamesDirectory);
+        File savedGamesFolder = new File(savedGamesDirectory);
         boolean exists = savedGamesFolder.exists();
 
         if (exists) {
@@ -138,11 +144,11 @@ public class ScoreboardManager {
                 }
 
                 clearScreen();
-                System.out.println("Pick a saved game file to load game.");
+                println("Pick a saved game file to load game.");
 
                 for (int idx = 0; idx < listOfFiles.length; idx++) {
                     File file = listOfFiles[idx];
-                    System.out.println((idx + 1) + ". " + file.getName());
+                    println((idx + 1) + ". " + file.getName());
                 }
 
                 try {
@@ -153,7 +159,7 @@ public class ScoreboardManager {
 
                     if (inFileArray) {
                         String loadFile = listOfFiles[fileArrayIndex].getName();
-                        loadFile = GameManager.savedGamesDirectory + File.separatorChar + loadFile;
+                        loadFile = savedGamesDirectory + File.separatorChar + loadFile;
                         BufferedReader br = new BufferedReader(new FileReader(loadFile));
                         String line = br.readLine();
                         int idx = 0;
@@ -161,7 +167,7 @@ public class ScoreboardManager {
                             if (line.contains("Date_")) {
                                 String date = line.split("_")[1];
                                 clearScreen();
-                                System.out.println("This game was last played: " + date);
+                                println("This game was last played: " + date);
                                 pauseScreen();
                             } else if (line.contains("Roster_")) {
                                 int numPlayers = Integer.parseInt(line.split("_")[1]);
@@ -214,18 +220,18 @@ public class ScoreboardManager {
     public static void saveScoreboard(Scoreboard scoreboard) {
 
         clearScreen();
-        System.out.println("Thank you for playing Farkle!");
+        println("Thank you for playing Farkle!");
 
         try {
 
-            File savedGamesFolder = new File(GameManager.savedGamesDirectory);
+            File savedGamesFolder = new File(savedGamesDirectory);
             boolean exists = savedGamesFolder.exists();
 
             if (!exists) { savedGamesFolder.mkdirs(); }
 
-            System.out.println("Enter a name for save game file: ");
-            String saveFile = System.console().readLine() + FILE_EXTENSION;
-            saveFile = GameManager.savedGamesDirectory + File.separatorChar + saveFile;
+            println("Enter a name for save game file: ");
+            String saveFile = scanner.next() + FILE_EXTENSION;
+            saveFile = savedGamesDirectory + File.separatorChar + saveFile;
             BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
             bw.write("Date_" + (new Date().toString()) + "\n");
             bw.write("Roster_" + scoreboard.playerRoster.length + "\n");

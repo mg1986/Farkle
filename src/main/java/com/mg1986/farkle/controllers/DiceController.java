@@ -1,16 +1,15 @@
-package com.mg1986.farkle.managers;
+package com.mg1986.farkle.controllers;
 
-import com.mg1986.farkle.components.Dice;
-import com.mg1986.farkle.components.Player;
-import com.mg1986.farkle.components.ScoreVariant;
+import com.mg1986.farkle.components.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.stream.IntStream;
+import static com.mg1986.farkle.controllers.MenuController.*;
+import static com.mg1986.farkle.controllers.ScoreVariantController.*;
 
-public class DiceManager {
+public class DiceController {
 
     // Max number of dice a player can use in a turn
     public static final int MAX_NUM_DICE = 6;
@@ -29,8 +28,8 @@ public class DiceManager {
         boolean playersTurnStillActive = true;
 
         if (player.getTurnScore() == 0) {
-            System.out.println(player.getName() + " farkled and will receive a score of zero points for this turn.");
-            MenuManager.pauseScreen();
+            println(player.getName() + " farkled and will receive a score of zero points for this turn.");
+            pauseScreen();
             playersTurnStillActive = false;
         }
 
@@ -43,47 +42,47 @@ public class DiceManager {
     //                     will choose which ones to keep and discard.
     public static void analyzeDiceRoll(Player player, ArrayList<Integer> diceRoll) {
 
-        MenuManager.clearScreen();
-        HashMap<Integer, ArrayList<Integer>> rollHashMap = buildRollHashMap(diceRoll);
-
-        Integer rollIndexListSizeOfTwo = 0;
-        for (ArrayList<Integer> rollIndexList : rollHashMap.values()) {
-            if (rollIndexList.size() == 2) rollIndexListSizeOfTwo++;
-        }
-
-        boolean straight = rollHashMap.size() == 6; // Indicates 6 unique values in roll
-        boolean threePairsOfTwo = (rollIndexListSizeOfTwo == 3); // Indicates 3 pairs of 2
+        clearScreen();
+        HashMap<Integer, ArrayList<Integer>> rollMap = buildRollHashMap(diceRoll);
 
         // Analyze roll for 3 pairs of 2 (a, a, b b, c, c) or straight (a, b, c, d, e, f)
-        if (straight || threePairsOfTwo) {
-            String pointType = (straight) ? "a straight" : "3 pairs of 2";
-            System.out.println(player.getName() + " rolled " + pointType + ". This is worth 1,500 points");
-            player.setTurnScore(1500);
-            MenuManager.pauseScreen();
+        if (straightExists(rollMap)) {
+            println(player.getName() + " rolled a straight. This is worth 3,000 points.");
+            player.setTurnScore(3000);
+            pauseScreen();
             rerollDice(player);
-        }  else { // Check for >= 3 of a Kind, Ones, and Fives
+        } else if (threePairsExists(rollMap)) {
+            println(player.getName() + " rolled Three Pairs Of Two. This is worth 1,500 points.");
+            player.setTurnScore(1500);
+            pauseScreen();
+            rerollDice(player);
+        } else { // Check for >= 3 of a Kind, Ones, and Fives
 
-            ArrayList<ScoreVariant> diceRollMenu = new ArrayList<ScoreVariant>();
+            ArrayList<ScoreVariant> diceRollMenu = new ArrayList<>();
 
-            rollHashMap.forEach((rollNum, rollIndexList) -> {
-                Integer rollIndexListSize = rollIndexList.size();
-                if (rollIndexListSize >= 3) {
-                    calculateThreeOfKindOrGreater(diceRollMenu, rollNum, rollIndexList);
-                } else if (rollNum == 1 || rollNum == 5) {
-                    calculateOneOrFive(diceRollMenu, rollNum, rollIndexList);
-                }
-            });
+            if (duplicatesExists(rollMap)) {
+                calculateDuplicates(rollMap, diceRollMenu);
+            } else if (singlesExists(rollMap)) {
+                calculateSingle(rollMap, diceRollMenu);
+            }
+
+            if (player.getNumDiceInUse() == 6) {
+                println(player.getName() + " has all 6 dice in use and must reroll.");
+                pauseScreen();
+                rerollDice(player);
+            }
 
             if (diceRollMenu.size() > 0) { // If players roll contains any scoring combinations, resolve dice roll.
                 resolveDiceRoll(player, diceRollMenu, diceRoll);
             } else { // Else if player's dice roll was a farkle, reset all turn variables end turn.
-                MenuManager.clearScreen();
-                System.out.println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
+                clearScreen();
+                println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
                         "------------------------------------------------------------------------");
                 player.resetPlayerTurn();
             }
         }
     }
+
     //------------------------------------------------------------------------------------------------------------------
     // resolveDiceRoll() - Takes all the possible point scoring options for a roll from the processDiceRoll() method
     //                     and presents them to the Player.  They may choose what point scoring options to keep and
@@ -96,31 +95,31 @@ public class DiceManager {
 
         while (!rollResolved) {
 
-            MenuManager.clearScreen();
-            System.out.println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
+            clearScreen();
+            println(player.getName() + "'s roll: " + Arrays.toString(diceRoll.toArray()) + "\n" +
                     "------------------------------------------------------------------------");
 
             int diceRollMenuSize = diceRollMenu.size();
             int resolveRollID = diceRollMenuSize + 1;
             int keepAllScoreVariants = diceRollMenuSize + 2;
 
-            System.out.println("Select from the following scoring combinations to keep for this roll:");
+            println("Select from the following scoring combinations to keep for this roll:");
             for (int idx = 0; idx < diceRollMenuSize; idx++) {
-                String scoreType = diceRollMenu.get(idx).scoreType;
-                Integer scoreAmount = diceRollMenu.get(idx).scoreAmount;
-                System.out.println((idx + 1)+ ". " + scoreType + " - " + scoreAmount + " points");
+                String scoreType = diceRollMenu.get(idx).type;
+                Integer scoreAmount = diceRollMenu.get(idx).points;
+                println((idx + 1)+ ". " + scoreType + " - " + scoreAmount + " points");
             }
 
-            System.out.println(resolveRollID + ". Keep current point total and resolve current roll");
-            System.out.println(keepAllScoreVariants + ". Keep all scoring options and resolve current roll");
+            println(resolveRollID + ". Keep current point total and resolve current roll");
+            println(keepAllScoreVariants + ". Keep all scoring options and resolve current roll.");
 
-            int menuOption = MenuManager.getMenuOptionInt();
+            int menuOption = getMenuOptionInt();
             int menuOptionListIndex = menuOption - 1;
 
             if (menuOption == resolveRollID) {
-                System.out.println("Do you want to keep the current point total and resolve current roll? y/n");
-                Scanner menuScanner = new Scanner(System.in);
-                String resolveRollInput = menuScanner.next();
+                println("Do you want to keep the current point total and resolve current roll? y/n");
+
+                String resolveRollInput = scanner.next();
 
                 switch(resolveRollInput) {
                     case "y":
@@ -130,14 +129,14 @@ public class DiceManager {
                         resolveDiceRoll(player, diceRollMenuReset, diceRoll);
                         break;
                     default:
-                        System.out.println("Please enter y/n");
+                        println("Please enter y/n");
                         break;
                 }
             } else if (menuOption == keepAllScoreVariants) {
 
                 for (ScoreVariant scoreVariant : diceRollMenu ) {
-                    player.setTurnScore(scoreVariant.scoreAmount);
-                    player.setNumDiceInUse(scoreVariant.scoreIndices.size());
+                    player.setTurnScore(scoreVariant.points);
+                    player.setNumDiceInUse(scoreVariant.indices.size());
                 }
 
                 rollResolved = true;
@@ -145,14 +144,14 @@ public class DiceManager {
             } else if (menuOptionListIndex < diceRollMenuSize) {
 
                 ScoreVariant scoreVariant = diceRollMenu.get(menuOptionListIndex);
-                player.setTurnScore(scoreVariant.scoreAmount);
-                player.setNumDiceInUse(scoreVariant.scoreIndices.size());
+                player.setTurnScore(scoreVariant.points);
+                player.setNumDiceInUse(scoreVariant.indices.size());
                 diceRollMenu.remove(scoreVariant);
 
                 if (player.getNumDiceInUse() == MAX_NUM_DICE) rerollDice(player);
 
             } else {
-                System.out.println("Please enter ID of scoring option from menu");
+                println("Please enter ID of scoring option from menu");
                 resolveDiceRoll(player, diceRollMenu, diceRoll);
             }
         }
@@ -160,7 +159,7 @@ public class DiceManager {
 
     //------------------------------------------------------------------------------------------------------------------
     // buildRollHashMap() - Takes a ArrayList of dice roll values and builds a hashmap using the roll values as keys,
-    //                      and the index of that value in the ArrayList, in a corresping ArrayList as the value. As an
+    //                      and the index of that value in the ArrayList, in a corresponding ArrayList as the value. As an
     //                      example, if a player rolls [1,2,4,5,6,6], the hashmap would look this this:
     //                      Key ----- Value
     //                       1  ----- [0]
@@ -212,8 +211,8 @@ public class DiceManager {
     //------------------------------------------------------------------------------------------------------------------
     // rerollDice() - Automatically makes player roll all 6 dice again if they have 6 dice tied up in points.
     public static void rerollDice(Player player) {
-        MenuManager.clearScreen();
-        System.out.println(player.getName() + " must roll again since all 6 dice are in play.");
+        clearScreen();
+        println(player.getName() + " must roll again since all 6 dice are in play.");
         player.resetNumDiceInUse();
         rollAndAnalyzeDice(player, MAX_NUM_DICE);
         String pauseMenu = System.console().readLine();

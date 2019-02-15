@@ -1,10 +1,10 @@
 package com.mg1986.farkle.ui;
 
-import com.mg1986.farkle.managers.GameManager;
+import static com.mg1986.farkle.controllers.GameController.*;
 import com.mg1986.farkle.components.RuleBook;
 import com.mg1986.farkle.components.Scoreboard;
-import com.mg1986.farkle.managers.MenuManager;
-import com.mg1986.farkle.managers.ScoreboardManager;
+import static com.mg1986.farkle.controllers.MenuController.*;
+import com.mg1986.farkle.controllers.ScoreboardController;
 
 /**
  * MainMenu class - Starting menu for the game. Allows players to:
@@ -15,34 +15,32 @@ import com.mg1986.farkle.managers.ScoreboardManager;
  *                      5. Exit game
  */
 
-public class MainMenu extends BaseMenu {
+public class MainMenu {
 
     //------------------------------------------------------------------------------------------------------------------
     // mainMenu() - Main menu of the game. Allows options to start new game, load saved game, delete all
     //              saved games, view game rules, and exit menu.
     public static void mainMenu() {
 
-        MenuManager.clearScreen();
-        System.out.println("Welcome to Farkle. Pick from the following options: \n" +
+        clearScreen();
+        println("Welcome to Farkle. Pick from the following options: \n" +
                 "1. New Game\n" +
                 "2. Load Game\n" +
                 "3. Clear Saved Games\n" +
                 "4. View Rules\n" +
                 "5. Exit");
 
-        int menuOption = MenuManager.getMenuOptionInt(scanner);
+        int menuOption = getMenuOptionInt();
 
         switch (menuOption) {
             case 1:  // New game
-                Scoreboard newScoreboard = ScoreboardManager.createScoreboard();
-                GameManager.startNewGame(newScoreboard);
+                startGame(true);
                 break;
             case 2: // Load game
-                Scoreboard loadedScoreboard = ScoreboardManager.loadScoreboard();
-                GameManager.startNewGame(loadedScoreboard);
+                startGame(false);
                 break;
             case 3:  // Delete saved games
-                GameManager.deleteSavedGames();
+                deleteSavedGames();
                 mainMenu();
                 break;
             case 4: // View game rules
@@ -50,10 +48,10 @@ public class MainMenu extends BaseMenu {
                 mainMenu();
                 break;
             case 5:  // Exit game
-                System.out.println("Thank you for playing Farkle!");
+                println("Thank you for playing Farkle!");
                 System.exit(0);
             default:
-                System.out.println("Please press 1-5 to proceed.");
+                println("Please press 1-5 to proceed.");
                 mainMenu();
                 break;
         }
@@ -64,12 +62,12 @@ public class MainMenu extends BaseMenu {
     //                       properly parsed and confirmed to be >= 2.
     public static Integer askHowManyPlayers() {
 
-        MenuManager.clearScreen();
-        System.out.println("Enter the number of players (must 2 or more players): ");
-        Integer numPlayers = MenuManager.getMenuOptionInt(scanner);
+        clearScreen();
+        println("Enter the number of players (must 2 or more players): ");
+        Integer numPlayers = getMenuOptionInt();
 
         if (numPlayers < 2) {
-            System.out.println("Farkle requires a minimum of 2 players");
+            println("Farkle requires a minimum of 2 players");
             numPlayers = askHowManyPlayers();
         }
 

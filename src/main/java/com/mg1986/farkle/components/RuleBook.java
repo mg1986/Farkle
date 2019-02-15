@@ -1,6 +1,6 @@
 package com.mg1986.farkle.components;
 
-import com.mg1986.farkle.managers.MenuManager;
+import static com.mg1986.farkle.controllers.MenuController.*;
 
 /**
  * Rulebook class - Rulebook for game of Farkle
@@ -37,8 +37,8 @@ public class RuleBook {
     //------------------------------------------------------------------------------------------------------------------
     // viewGameRules() - Return String of game rules
     public static void viewRulebook() {
-        MenuManager.clearScreen();
-        System.out.println(gameRules);
-        MenuManager.pauseScreen();
+        clearScreen();
+        println(gameRules);
+        pauseScreen();
     }
 }
