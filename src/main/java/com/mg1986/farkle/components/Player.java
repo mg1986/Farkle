@@ -15,16 +15,16 @@ public class Player {
     //Player's score for their current turn
     private int turnScore;
 
-    // Number of dice Player has avialable for current roll
+    // Number of dice Player has available for current roll
     private int numDiceInUse;
 
-    // If Player has made it on the scoreboard
+    // If Player is on the scoreboard
     private boolean onScoreboard;
 
-    // Is is the Player's current turn -  used to preserve order of turns when game is saved
+    // If currently Players turn - used to preserve order of turns when game is saved
     private boolean isCurrentTurn;
 
-    // Player constructor -  Create new Player object for new game
+    // Player constructor - Create new Player object for new game
     public Player (String name) {
         playerName = name;
         playerScore = 0;
@@ -34,7 +34,7 @@ public class Player {
         isCurrentTurn = false;
     }
 
-    // Player constructor -  Create Player object for game loaded from save file
+    // Player constructor - Create Player object for game loaded from save file
     public Player (String name, int score, int numDice, boolean onBoard) {
         playerName = name;
         playerScore = score;

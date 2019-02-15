@@ -20,7 +20,7 @@ public class Dice {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // rollDice() - Returns random integer from 1 - numSides
+    // rollDice() - Returns random integer from 1 <--> numSides
     public Integer rollDice () {
         Integer randomInteger =  1 + secureRandom.nextInt(numSides);
         return randomInteger;
