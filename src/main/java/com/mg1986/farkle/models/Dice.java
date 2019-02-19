@@ -1,4 +1,4 @@
-package com.mg1986.farkle.components;
+package com.mg1986.farkle.models;
 
 import java.security.SecureRandom;
 

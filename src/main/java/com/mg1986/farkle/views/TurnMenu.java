@@ -1,7 +1,7 @@
-package com.mg1986.farkle.ui;
+package com.mg1986.farkle.views;
 
-import com.mg1986.farkle.components.Player;
-import com.mg1986.farkle.components.Scoreboard;
+import com.mg1986.farkle.models.Player;
+import com.mg1986.farkle.models.Scoreboard;
 import static com.mg1986.farkle.controllers.DiceController.*;
 import static com.mg1986.farkle.controllers.GameController.*;
 import static com.mg1986.farkle.controllers.MenuController.*;

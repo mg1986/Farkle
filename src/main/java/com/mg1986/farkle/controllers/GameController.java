@@ -2,10 +2,10 @@ package com.mg1986.farkle.controllers;
 
 import java.io.*;
 import java.util.Date;
-import com.mg1986.farkle.ui.TurnMenu;
-import com.mg1986.farkle.components.Player;
-import com.mg1986.farkle.components.Scoreboard;
-import static com.mg1986.farkle.ui.MainMenu.mainMenu;
+import com.mg1986.farkle.views.TurnMenu;
+import com.mg1986.farkle.models.Player;
+import com.mg1986.farkle.models.Scoreboard;
+import static com.mg1986.farkle.views.MainMenu.mainMenu;
 import static com.mg1986.farkle.controllers.MenuController.*;
 import static com.mg1986.farkle.controllers.ScoreboardController.*;
 
