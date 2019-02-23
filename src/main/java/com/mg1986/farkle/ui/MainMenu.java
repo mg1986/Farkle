@@ -1,4 +1,4 @@
-package com.mg1986.farkle.views;
+package com.mg1986.farkle.ui;
 
 import static com.mg1986.farkle.controllers.GameController.*;
 import static com.mg1986.farkle.controllers.MenuController.*;

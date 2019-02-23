@@ -1,4 +1,4 @@
-package com.mg1986.farkle.models;
+package com.mg1986.farkle.model;
 
 /**
  * Rulebook class - Rulebook for game of Farkle

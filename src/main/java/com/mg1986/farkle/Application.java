@@ -1,6 +1,6 @@
 package com.mg1986.farkle;
 
-import com.mg1986.farkle.views.MainMenu;
+import com.mg1986.farkle.ui.MainMenu;
 
 public class Application {
 

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
-import com.mg1986.farkle.models.*;
+import com.mg1986.farkle.model.*;
 import static com.mg1986.farkle.controllers.MenuController.*;
 import static com.mg1986.farkle.controllers.ScoreVariantController.*;
 

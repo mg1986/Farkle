@@ -2,7 +2,7 @@ package com.mg1986.farkle.controllers;
 
 import java.util.Map;
 import java.util.ArrayList;
-import com.mg1986.farkle.models.ScoreVariant;
+import com.mg1986.farkle.model.ScoreVariant;
 
 /**
  * ScoreVariantController class - Controls creation of ScoreVariants

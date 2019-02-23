@@ -2,8 +2,8 @@ package com.mg1986.farkle.controllers;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import com.mg1986.farkle.models.Player;
-import com.mg1986.farkle.models.Scoreboard;
+import com.mg1986.farkle.model.Player;
+import com.mg1986.farkle.model.Scoreboard;
 import static com.mg1986.farkle.controllers.MenuController.*;
 
 /**

@@ -1,4 +1,4 @@
-package com.mg1986.farkle.models;
+package com.mg1986.farkle.model;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
 package com.mg1986.farkle.controllers;
 
-import com.mg1986.farkle.models.RuleBook;
+import com.mg1986.farkle.model.RuleBook;
 import static com.mg1986.farkle.controllers.MenuController.*;
 
 /**

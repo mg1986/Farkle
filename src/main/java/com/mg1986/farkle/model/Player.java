@@ -1,4 +1,4 @@
-package com.mg1986.farkle.models;
+package com.mg1986.farkle.model;
 
 /**
  * Player class - Represents a player in the game.
