@@ -15,7 +15,7 @@ import static com.mg1986.farkle.controllers.ScoreboardController.*;
 
 public class GameController {
 
-    // Directory where games are saved too
+    // Directory where games are saved
    public static String savedGamesDirectory = System.getProperty("user.dir") + File.separatorChar + "saved_games";
 
 
@@ -41,13 +41,13 @@ public class GameController {
                 TurnMenu.startPlayerTurn(scoreboard, player);
                 int turnScore = player.getTurnScore();
 
-                if (player.getTurnScore() >= scoreboard.MIN_SCOREBOARD_SCORE) {
+                if (player.getTurnScore() >= Scoreboard.MIN_SCOREBOARD_SCORE) {
                     player.setOnScoreboard(true);
                 }
 
                 player.setPlayerScore(turnScore);
 
-                if (player.getPlayerScore() >= scoreboard.MAX_SCORE) {
+                if (player.getPlayerScore() >= Scoreboard.MAX_SCORE) {
                     MenuController.clearScreen();
                     println(player.getName() + " won the game with a score of " +
                             String.format("%,d", player.getPlayerScore()) + " points!");
@@ -115,7 +115,7 @@ public class GameController {
                                 int score = Integer.parseInt(line.split("_")[2]);
                                 int numDiceInUse = Integer.parseInt(line.split("_")[3]);
                                 boolean onScoreboard = false;
-                                if (score > scoreboard.MIN_SCOREBOARD_SCORE) {
+                                if (score > Scoreboard.MIN_SCOREBOARD_SCORE) {
                                     onScoreboard = true;
                                 }
                                 Player player = new Player(name, score, numDiceInUse, onScoreboard);
@@ -179,7 +179,7 @@ public class GameController {
 
             for (int idx = 0; idx < scoreboard.playerRoster.length; idx++) {
                 Player player = scoreboard.playerRoster[idx];
-                if (player.getIsCurrentTurn() == true) {
+                if (player.getIsCurrentTurn()) {
                     currentTurn = true;
                     currentTurnIdx = idx;
                 }

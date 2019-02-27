@@ -1,6 +1,8 @@
 *Project Summary:*
 
-Farkle is a dice game where the goal is for a player to reach 10,000 points before the other players via different scoring combinations. This project is a Java command-line version of this game.  This game can be played with anywhere from one to an infinite number of players. To play, compile aand run Application.
+Farkle is a dice game where the goal is for a player to reach 10,000 points before the other players via different scoring combinations. 
+This project is a Java command-line version of this game.  This game can be played with anywhere from one to an infinite number of players. 
+To play, compile and run Application.
 
 *Rules:*
 ----------------------------------

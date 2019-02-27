@@ -113,8 +113,8 @@ public class DiceController {
                 println((idx + 1)+ ". " + scoreType + " - " + scoreAmount + " points");
             }
 
-            println(resolveRollID + ". Keep current point total and resolve current roll");
-            println(keepAllScoreVariants + ". Keep all scoring options and resolve current roll.");
+            println(resolveRollID + ". Keep current points and resolve current roll");
+            println(keepAllScoreVariants + ". Keep all points and resolve current roll.");
 
             int menuOption = getMenuOptionInt();
             int menuOptionListIndex = menuOption - 1;
