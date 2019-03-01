@@ -7,7 +7,7 @@ import com.mg1986.farkle.model.Scoreboard;
 import static com.mg1986.farkle.controllers.MenuController.*;
 
 /**
- * ScoreboardController class - Controls RuleBook logic
+ * ScoreboardController class - Controls Scoreboard logic
  */
 
 public class ScoreboardController {
